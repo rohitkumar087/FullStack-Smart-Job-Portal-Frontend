@@ -22,8 +22,8 @@ export const getHome = async () => {
 };
 
 // ================ JOB APIs ================
-export const getAllJobs = async () => {
-  const response = await api.get("/api/job/getJob");
+export const getAllJobs = async (page = 0, size = 6) => {
+  const response = await api.get(`/api/job/getJob?page=${page}&size=${size}`);
   return response.data;
 };
 
@@ -111,7 +111,7 @@ export const filterJobs = async (filters) => {
   if (filters.maxSalary) params.append("maxSalary", filters.maxSalary);
 
   params.append("page", filters.page || 0);
-  params.append("size", filters.size || 10);
+  params.append("size", filters.size || 6);
 
   const response = await api.get(`/api/job/filter?${params.toString()}`);
   return response.data;

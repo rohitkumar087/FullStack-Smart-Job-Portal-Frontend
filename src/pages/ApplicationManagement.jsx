@@ -632,10 +632,12 @@ const ApplicationsManagement = () => {
                     </div>
                   </div>
 
-                  <button className="mt-6 w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-blue-600 text-white text-sm font-bold hover:bg-blue-700 transition">
+                  {/* <button className="mt-6 w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-blue-600 text-white text-sm font-bold hover:bg-blue-700 transition "
+                  onClick={() => handleViewResume(application.id)}
+>
                     <Download size={17} />
-                    Download Resume
-                  </button>
+                    View Resume
+                  </button> */}
                 </>
               ) : (
                 <p className="text-sm text-slate-500">

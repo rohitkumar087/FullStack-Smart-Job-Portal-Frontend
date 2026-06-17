@@ -17,6 +17,8 @@ import { Link } from "react-router-dom";
 const JobListings = () => {
   const [jobs, setJobs] = useState([]);
   const [totalJobs, setTotalJobs] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -31,11 +33,11 @@ const JobListings = () => {
     minSalary: "",
     maxSalary: "",
     page: 0,
-    size: 10,
+    size: 6,
   });
 
   useEffect(() => {
-    fetchJobs();
+    fetchJobs(0);
   }, []);
 
   const sortJobs = (jobsList, selectedSort) => {
@@ -72,18 +74,31 @@ const JobListings = () => {
     return sortedJobs;
   };
 
-  const fetchJobs = async () => {
+  const isFilterApplied = () => {
+    return (
+      filters.keyword ||
+      filters.location ||
+      filters.jobType ||
+      filters.experience ||
+      filters.minSalary ||
+      filters.maxSalary
+    );
+  };
+
+  const fetchJobs = async (pageNumber = 0) => {
     try {
       setLoading(true);
       setError("");
 
-      const data = await getAllJobs();
+      const data = await getAllJobs(pageNumber, filters.size);
 
       const jobList = data.content || [];
       const sortedJobList = sortJobs(jobList, sortBy);
 
       setJobs(sortedJobList);
       setTotalJobs(data.totalElements || jobList.length || 0);
+      setTotalPages(data.totalPages || 0);
+      setCurrentPage(data.number ?? pageNumber);
     } catch (err) {
       setError("Failed to load jobs");
     } finally {
@@ -121,14 +136,15 @@ const JobListings = () => {
     setJobs(sortedJobList);
   };
 
-  const handleApplyFilters = async () => {
+  const handleApplyFilters = async (pageNumber = 0) => {
     try {
       setLoading(true);
       setError("");
 
       const data = await filterJobs({
         ...filters,
-        page: 0,
+        page: pageNumber,
+        size: filters.size,
       });
 
       const jobList = data.content || [];
@@ -136,6 +152,8 @@ const JobListings = () => {
 
       setJobs(sortedJobList);
       setTotalJobs(data.totalElements || jobList.length || 0);
+      setTotalPages(data.totalPages || 0);
+      setCurrentPage(data.number ?? pageNumber);
     } catch (err) {
       setError("Failed to filter jobs");
     } finally {
@@ -152,7 +170,7 @@ const JobListings = () => {
       minSalary: "",
       maxSalary: "",
       page: 0,
-      size: 10,
+      size: 6,
     };
 
     setFilters(emptyFilters);
@@ -162,18 +180,39 @@ const JobListings = () => {
       setLoading(true);
       setError("");
 
-      const data = await getAllJobs();
+      const data = await getAllJobs(0, 10);
 
       const jobList = data.content || [];
       const sortedJobList = sortJobs(jobList, "newest");
 
       setJobs(sortedJobList);
       setTotalJobs(data.totalElements || jobList.length || 0);
+      setTotalPages(data.totalPages || 0);
+      setCurrentPage(data.number ?? 0);
     } catch (err) {
       setError("Failed to load jobs");
     } finally {
       setLoading(false);
     }
+  };
+
+
+
+  const handlePageChange = (pageNumber) => {
+    if (pageNumber < 0 || pageNumber >= totalPages) {
+      return;
+    }
+
+    if (isFilterApplied()) {
+      handleApplyFilters(pageNumber);
+    } else {
+      fetchJobs(pageNumber);
+    }
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   const jobTypes = ["Full Time", "Part Time", "Contract", "Internship", "Remote"];
@@ -251,7 +290,7 @@ const JobListings = () => {
 
             <button
               type="button"
-              onClick={handleApplyFilters}
+              onClick={() => handleApplyFilters(0)}
               className="px-8 py-4 rounded-2xl bg-blue-600 text-white text-sm font-bold shadow-sm hover:bg-blue-700 transition"
             >
               Search Jobs
@@ -382,7 +421,7 @@ const JobListings = () => {
 
             <button
               type="button"
-              onClick={handleApplyFilters}
+              onClick={() => handleApplyFilters(0)}
               className="mt-7 w-full py-3.5 rounded-xl bg-blue-600 text-white text-sm font-bold shadow-sm hover:bg-blue-700 transition"
             >
               Apply Filters
@@ -397,7 +436,7 @@ const JobListings = () => {
                 <h2 className="text-2xl font-bold">All Jobs</h2>
 
                 <p className="text-sm text-slate-500 mt-1">
-                  Showing latest matching jobs for you
+                  Page {currentPage + 1} of {totalPages || 1}
                 </p>
               </div>
 
@@ -532,24 +571,51 @@ const JobListings = () => {
                 })}
             </div>
 
-            {/* Pagination placeholder */}
-            <div className="mt-8 flex items-center justify-center gap-2">
-              <button className="w-10 h-10 rounded-xl bg-blue-600 text-white text-sm font-bold shadow-sm">
-                1
-              </button>
+            {/* Pagination */}
+            {!loading && !error && totalPages > 1 && (
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 0}
+                  className={`px-4 h-10 rounded-xl border text-sm font-bold transition ${
+                    currentPage === 0
+                      ? "bg-slate-100 text-slate-400 cursor-not-allowed border-gray-100"
+                      : "bg-white text-slate-600 border-gray-100 hover:bg-blue-50 hover:text-blue-600"
+                  }`}
+                >
+                  Prev
+                </button>
 
-              <button className="w-10 h-10 rounded-xl bg-white border border-gray-100 text-slate-600 text-sm font-bold">
-                2
-              </button>
+                {Array.from({ length: totalPages }, (_, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => handlePageChange(index)}
+                    className={`w-10 h-10 rounded-xl text-sm font-bold transition ${
+                      currentPage === index
+                        ? "bg-blue-600 text-white shadow-sm"
+                        : "bg-white border border-gray-100 text-slate-600 hover:bg-blue-50 hover:text-blue-600"
+                    }`}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
 
-              <button className="w-10 h-10 rounded-xl bg-white border border-gray-100 text-slate-600 text-sm font-bold">
-                3
-              </button>
-
-              <button className="px-4 h-10 rounded-xl bg-white border border-gray-100 text-slate-600 text-sm font-bold">
-                Next
-              </button>
-            </div>
+                <button
+                  type="button"
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages - 1}
+                  className={`px-4 h-10 rounded-xl border text-sm font-bold transition ${
+                    currentPage === totalPages - 1
+                      ? "bg-slate-100 text-slate-400 cursor-not-allowed border-gray-100"
+                      : "bg-white text-slate-600 border-gray-100 hover:bg-blue-50 hover:text-blue-600"
+                  }`}
+                >
+                  Next
+                </button>
+              </div>
+            )}
           </section>
         </div>
       </main>

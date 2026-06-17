@@ -72,6 +72,26 @@ const JobDetails = () => {
     return "Not disclosed";
   };
 
+  const handleShareJob = async () => {
+    const jobUrl = window.location.href;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: job.title,
+          text: `Check this job: ${job.title} at ${job.company}`,
+          url: jobUrl,
+        });
+      } else {
+        await navigator.clipboard.writeText(jobUrl);
+        alert("Job link copied to clipboard!");
+      }
+    } catch (error) {
+      await navigator.clipboard.writeText(jobUrl);
+      alert("Job link copied to clipboard!");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#f8fbff] text-slate-950">
       <Navbar />
@@ -314,30 +334,34 @@ const JobDetails = () => {
             {/* Right Sidebar */}
             <aside className="space-y-6 sticky top-24">
               {/* Apply Card */}
-                <div className="bg-white rounded-[1.8rem] border border-gray-100 shadow-xl shadow-blue-100/40 p-6">
-    <h2 className="text-xl font-bold">Apply for this job</h2>
+              <div className="bg-white rounded-[1.8rem] border border-gray-100 shadow-xl shadow-blue-100/40 p-6">
+                <h2 className="text-xl font-bold">Apply for this job</h2>
 
-    <p className="mt-2 text-sm text-slate-500 leading-relaxed">
-      Submit your application and take the next step in your career.
-    </p>
+                <p className="mt-2 text-sm text-slate-500 leading-relaxed">
+                  Submit your application and take the next step in your career.
+                </p>
 
-    <Link
-      to={`/applyJob/${job.id}`}
-      className="mt-6 w-full inline-flex items-center justify-center py-3.5 rounded-xl bg-blue-600 text-white text-sm font-bold shadow-sm hover:bg-blue-700 transition"
-    >
-      Apply Now
-    </Link>
+                <Link
+                  to={`/applyJob/${job.id}`}
+                  className="mt-6 w-full inline-flex items-center justify-center py-3.5 rounded-xl bg-blue-600 text-white text-sm font-bold shadow-sm hover:bg-blue-700 transition"
+                >
+                  Apply Now
+                </Link>
 
-    <button className="mt-3 w-full py-3.5 rounded-xl bg-slate-950 text-white text-sm font-bold hover:bg-blue-600 transition flex items-center justify-center gap-2">
-      <Heart size={18} />
-      Save Job
-    </button>
+                <button className="mt-3 w-full py-3.5 rounded-xl bg-slate-950 text-white text-sm font-bold hover:bg-blue-600 transition flex items-center justify-center gap-2">
+                  <Heart size={18} />
+                  Save Job
+                </button>
 
-    <button className="mt-3 w-full py-3.5 rounded-xl border border-gray-100 bg-white text-slate-700 text-sm font-bold hover:bg-slate-50 transition flex items-center justify-center gap-2">
-      <Share2 size={18} />
-      Share Job
-    </button>
-  </div>
+                <button
+                  type="button"
+                  onClick={handleShareJob}
+                  className="mt-3 w-full py-3.5 rounded-xl border border-gray-100 bg-white text-slate-700 text-sm font-bold hover:bg-slate-50 transition flex items-center justify-center gap-2"
+                >
+                  <Share2 size={18} />
+                  Share Job
+                </button>
+              </div>
 
               {/* Company Card */}
               <div className="bg-white rounded-[1.8rem] border border-gray-100 shadow-sm p-6">

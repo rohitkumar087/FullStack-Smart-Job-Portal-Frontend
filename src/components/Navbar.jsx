@@ -9,7 +9,7 @@ import {
   Moon,
   ShieldCheck,
 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink as RouterNavLink, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -252,7 +252,10 @@ const Navbar = () => {
                 <MobileLink to="/myPostedJobs" setMenuOpen={setMenuOpen}>
                   My Posted Jobs
                 </MobileLink>
-                <MobileLink to="/applicationManagement" setMenuOpen={setMenuOpen}>
+                <MobileLink
+                  to="/applicationManagement"
+                  setMenuOpen={setMenuOpen}
+                >
                   Applications
                 </MobileLink>
                 <MobileLink to="/companyProfile" setMenuOpen={setMenuOpen}>
@@ -272,7 +275,10 @@ const Navbar = () => {
                 <MobileLink to="/admin/recruiters" setMenuOpen={setMenuOpen}>
                   Recruiters
                 </MobileLink>
-                <MobileLink to="/admin/recruiters/pending" setMenuOpen={setMenuOpen}>
+                <MobileLink
+                  to="/admin/recruiters/pending"
+                  setMenuOpen={setMenuOpen}
+                >
                   Pending Recruiters
                 </MobileLink>
                 <MobileLink to="/admin/jobs" setMenuOpen={setMenuOpen}>
@@ -390,24 +396,38 @@ const Navbar = () => {
 
 const NavLink = ({ to, children }) => {
   return (
-    <Link
+    <RouterNavLink
       to={to}
-      className="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition"
+      end={to === "/"}
+      className={({ isActive }) =>
+        `text-sm font-bold transition ${
+          isActive
+            ? "text-blue-600 dark:text-blue-400"
+            : "text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400"
+        }`
+      }
     >
       {children}
-    </Link>
+    </RouterNavLink>
   );
 };
 
 const MobileLink = ({ to, children, setMenuOpen }) => {
   return (
-    <Link
+    <RouterNavLink
       to={to}
+      end={to === "/"}
       onClick={() => setMenuOpen(false)}
-      className="block px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-sm font-bold text-slate-700 dark:text-slate-200"
+      className={({ isActive }) =>
+        `block px-4 py-3 rounded-xl text-sm font-bold transition ${
+          isActive
+            ? "bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400"
+            : "bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200"
+        }`
+      }
     >
       {children}
-    </Link>
+    </RouterNavLink>
   );
 };
 

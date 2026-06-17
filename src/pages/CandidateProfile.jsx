@@ -345,7 +345,7 @@ const userEmail = localStorage.getItem("userEmail") || "Not added";
                       <div>
                         <h2 className="text-2xl font-bold">Basic Details</h2>
                         <p className="text-sm text-slate-500">
-                          Candidate profile fields saved in backend.
+                          Share you basic details here.
                         </p>
                       </div>
                     </div>
@@ -516,13 +516,13 @@ const userEmail = localStorage.getItem("userEmail") || "Not added";
                       placeholder="500000"
                     />
 
-                    <InputField
+                    {/* <InputField
                       label="Resume URL"
                       name="resumeUrl"
                       value={formData.resumeUrl}
                       onChange={handleChange}
                       placeholder="uploads/resume.pdf"
-                    />
+                    /> */}
 
                     <InputField
                       label="Portfolio URL"
