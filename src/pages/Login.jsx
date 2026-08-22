@@ -177,7 +177,7 @@ const Login = () => {
                       type="button"
                       className="text-xs font-bold text-blue-600 hover:text-blue-700"
                     >
-                      Forgot Password?
+                      {/* Forgot Password? */}
                     </button>
                   </div>
 
@@ -192,8 +192,6 @@ const Login = () => {
                       placeholder="Enter your password"
                       className="w-full bg-transparent outline-none text-sm text-slate-700 placeholder:text-slate-400"
                     />
-
-                    <Eye size={19} className="text-slate-400" />
                   </div>
                 </div>
 

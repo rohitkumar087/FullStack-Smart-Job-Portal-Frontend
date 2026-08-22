@@ -47,30 +47,30 @@ const ApplyJob = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
- useEffect(() => {
-  fetchJobDetails();
-  fetchCandidateProfile();
-}, [jobId]);
+  useEffect(() => {
+    fetchJobDetails();
+    fetchCandidateProfile();
+  }, [jobId]);
 
   const fetchCandidateProfile = async () => {
-  try {
-    const profile = await getCandidateProfile();
+    try {
+      const profile = await getCandidateProfile();
 
-    setFormData((prev) => ({
-      ...prev,
-      phone: profile.phone || "",
-      currentLocation: profile.location || "",
-      experience: profile.experience || "",
-      expectedSalary: profile.expectedSalary || "",
-      portfolioUrl: profile.portfolioUrl || "",
-      linkedinUrl: profile.linkedinUrl || "",
-      githubUrl: profile.githubUrl || "",
-      skills: profile.skills ? profile.skills.join(", ") : "",
-    }));
-  } catch (err) {
-    console.log("Candidate profile not found yet. First time applying.");
-  }
-};
+      setFormData((prev) => ({
+        ...prev,
+        phone: profile.phone || "",
+        currentLocation: profile.location || "",
+        experience: profile.experience || "",
+        expectedSalary: profile.expectedSalary || "",
+        portfolioUrl: profile.portfolioUrl || "",
+        linkedinUrl: profile.linkedinUrl || "",
+        githubUrl: profile.githubUrl || "",
+        skills: profile.skills ? profile.skills.join(", ") : "",
+      }));
+    } catch (err) {
+      console.log("Candidate profile not found yet. First time applying.");
+    }
+  };
 
   const fetchJobDetails = async () => {
     try {
@@ -114,10 +114,10 @@ const ApplyJob = () => {
       return;
     }
 
-    if (!formData.phone || !formData.currentLocation || !formData.coverLetter) {
-      setError("Please fill phone, current location, and cover letter.");
-      return;
-    }
+    // if (!formData.phone || !formData.currentLocation || !formData.coverLetter) {
+    //   setError("Please fill phone, current location, and cover letter.");
+    //   return;
+    // }
 
     try {
       setSubmitting(true);
@@ -148,17 +148,23 @@ const ApplyJob = () => {
 
       const result = await applyJob(jobId, data);
 
+console.log("APPLICATION SUCCESS:", result);
+console.log("TOKEN AFTER APPLY:", localStorage.getItem("token"));
+
+
       setSuccess(result || "Application submitted successfully.");
 
       setTimeout(() => {
+            console.log("Navigating to candidate dashboard");
         navigate("/candidateDashboard");
       }, 1200);
     } catch (err) {
       console.log("Apply error:", err);
+
       setError(
-        err.response?.data ||
-          err.message ||
-          "Something went wrong while applying."
+        err.response?.data?.message ||
+        err.message ||
+        "Something went wrong while applying."
       );
     } finally {
       setSubmitting(false);

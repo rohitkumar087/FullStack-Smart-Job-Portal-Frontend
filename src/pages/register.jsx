@@ -27,7 +27,7 @@
 //             console.log(response)
 //             alert("Registration Successful")
 //             navigate("/login")
-            
+
 //         } catch (error) {
 //             console.log(error)
 //         }
@@ -136,7 +136,7 @@ const Register = () => {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
-    phone: "",
+    // phone: "",
     role: "CANDIDATE",
     companyName: "",
     companyWebsite: "",
@@ -162,55 +162,59 @@ const Register = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  setError("");
-  setSuccess("");
+    setError("");
+    setSuccess("");
 
-  if (formData.password !== formData.confirmPassword) {
-    setError("Password and Confirm Password do not match");
-    return;
-  }
-
-  if (!formData.termsAccepted) {
-    setError("Please accept Terms & Conditions");
-    return;
-  }
-
-  if (isRecruiter) {
-    if (
-      !formData.companyName.trim() ||
-      !formData.companyLocation.trim() ||
-      !formData.companyDescription.trim()
-    ) {
-      setError("Please fill company name, company location, and company description.");
+    if (formData.password !== formData.confirmPassword) {
+      setError("Password and Confirm Password do not match");
       return;
     }
-  }
 
-  try {
-    const payload = {
-      name: formData.fullName,
-      email: formData.email,
-      password: formData.password,
-      role: formData.role,
-      companyName: isRecruiter ? formData.companyName : null,
-      companyWebsite: isRecruiter ? formData.companyWebsite : null,
-      companyLocation: isRecruiter ? formData.companyLocation : null,
-      companyDescription: isRecruiter ? formData.companyDescription : null,
-    };
+    if (!formData.termsAccepted) {
+      setError("Please accept Terms & Conditions");
+      return;
+    }
 
-    const result = await registerUser(payload);
+    if (isRecruiter) {
+      if (
+        !formData.companyName.trim() ||
+        !formData.companyLocation.trim() ||
+        !formData.companyDescription.trim()
+      ) {
+        setError("Please fill company name, company location, and company description.");
+        return;
+      }
+    }
 
-    setSuccess("Account created successfully. Please login.");
+    try {
+      const payload = {
+        name: formData.fullName,
+        email: formData.email,
+        password: formData.password,
+        role: formData.role,
+        companyName: isRecruiter ? formData.companyName : null,
+        companyWebsite: isRecruiter ? formData.companyWebsite : null,
+        companyLocation: isRecruiter ? formData.companyLocation : null,
+        companyDescription: isRecruiter ? formData.companyDescription : null,
+      };
 
-    setTimeout(() => {
-      navigate("/login");
-    }, 1000);
-  } catch (err) {
-    setError(getErrorMessage(err, "Registration failed"));
-  }
-};
+      const result = await registerUser(payload);
+
+      setSuccess("Account created successfully. Please login.");
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 1000);
+    } catch (err) {
+      if (err.response?.status === 400) {
+        setError(err.response?.data?.message || "Email already exists");
+      } else {
+        setError(getErrorMessage(err, "Registration failed"));
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#f8fbff] text-slate-950 flex items-center justify-center px-5 py-10">
@@ -298,17 +302,17 @@ const Register = () => {
                     : "Create candidate account using basic details."}
                 </p>
               </div>
-                    {error && (
-  <div className="mb-5 rounded-2xl bg-red-50 border border-red-100 px-4 py-3 text-sm font-semibold text-red-600">
-    {error}
-  </div>
-)}
+              {error && (
+                <div className="mb-5 rounded-2xl bg-red-50 border border-red-100 px-4 py-3 text-sm font-semibold text-red-600">
+                  {error}
+                </div>
+              )}
 
-{success && (
-  <div className="mb-5 rounded-2xl bg-green-50 border border-green-100 px-4 py-3 text-sm font-semibold text-green-600">
-    {success}
-  </div>
-)}
+              {success && (
+                <div className="mb-5 rounded-2xl bg-green-50 border border-green-100 px-4 py-3 text-sm font-semibold text-green-600">
+                  {success}
+                </div>
+              )}
               <form className="space-y-5" onSubmit={handleSubmit}>
                 {/* role */}
                 <div>
@@ -318,11 +322,10 @@ const Register = () => {
 
                   <div className="grid sm:grid-cols-2 gap-3">
                     <label
-                      className={`relative flex items-center gap-3 rounded-2xl px-4 py-4 cursor-pointer border transition ${
-                        formData.role === "CANDIDATE"
-                          ? "bg-blue-50 border-blue-200"
-                          : "bg-slate-50 border-gray-100"
-                      }`}
+                      className={`relative flex items-center gap-3 rounded-2xl px-4 py-4 cursor-pointer border transition ${formData.role === "CANDIDATE"
+                        ? "bg-blue-50 border-blue-200"
+                        : "bg-slate-50 border-gray-100"
+                        }`}
                     >
                       <input
                         type="radio"
@@ -346,11 +349,10 @@ const Register = () => {
                     </label>
 
                     <label
-                      className={`relative flex items-center gap-3 rounded-2xl px-4 py-4 cursor-pointer border transition ${
-                        formData.role === "RECRUITER"
-                          ? "bg-blue-50 border-blue-200"
-                          : "bg-slate-50 border-gray-100"
-                      }`}
+                      className={`relative flex items-center gap-3 rounded-2xl px-4 py-4 cursor-pointer border transition ${formData.role === "RECRUITER"
+                        ? "bg-blue-50 border-blue-200"
+                        : "bg-slate-50 border-gray-100"
+                        }`}
                     >
                       <input
                         type="radio"
@@ -414,7 +416,7 @@ const Register = () => {
                 </div>
 
                 {/* phone */}
-                <div>
+                {/* <div>
                   <label className="block text-sm font-bold text-slate-700 mb-2">
                     Phone Number
                   </label>
@@ -430,7 +432,7 @@ const Register = () => {
                       className="w-full bg-transparent outline-none text-sm text-slate-700 placeholder:text-slate-400"
                     />
                   </div>
-                </div>
+                </div> */}
 
                 {/* Recruiter Company Details */}
                 {isRecruiter && (

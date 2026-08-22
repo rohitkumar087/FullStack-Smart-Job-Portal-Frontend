@@ -417,12 +417,12 @@ const userEmail = localStorage.getItem("userEmail") || "Not added";
                         </div>
                       </div>
 
-                      {profile?.resumeUrl && (
+                      {/* {profile?.resumeUrl && (
                         <button className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-blue-600 text-white text-sm font-bold hover:bg-blue-700 transition">
                           <Eye size={17} />
                           View Resume
                         </button>
-                      )}
+                      )} */}
                     </div>
 
                     <div className="mt-6 p-5 rounded-[1.5rem] bg-slate-50 border border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
