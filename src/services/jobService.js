@@ -57,11 +57,10 @@ export const viewResume = async (applicationId) => {
 
 // =============== APPLICATION APIs ================
 export const applyJob = async (jobId, formData) => {
-  const response = await api.post(`/api/application/apply/${jobId}`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  const response = await api.post(
+    `/api/application/apply/${jobId}`,
+    formData
+  );
 
   return response.data;
 };
