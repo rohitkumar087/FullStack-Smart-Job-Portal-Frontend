@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import {
   Search,
@@ -141,41 +142,49 @@ const Home = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#f8fbff] text-slate-950">
+    <div className="min-h-screen overflow-x-hidden bg-[#f8fbff] text-slate-950">
       <Navbar />
 
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-100/50 rounded-full blur-3xl -z-10" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-100/50 rounded-full blur-3xl -z-10" />
+        {/* Background Effects */}
+        <div className="absolute -top-32 -right-32 hidden sm:block w-[520px] h-[520px] bg-blue-100/60 rounded-full blur-3xl -z-10" />
+        <div className="absolute bottom-0 -left-40 hidden lg:block w-[500px] h-[500px] bg-indigo-100/50 rounded-full blur-3xl -z-10" />
 
-        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-12 lg:py-20">
-          <div className="grid lg:grid-cols-2 gap-14 items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-14 sm:py-16 lg:py-24">
+          <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+
             {/* Left Content */}
-            <div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-blue-100 shadow-sm mb-6">
+            <div className="max-w-2xl">
+
+              <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/90 border border-blue-100 shadow-sm mb-5 sm:mb-7">
                 <Sparkles size={16} className="text-blue-600" />
-                <span className="text-sm font-semibold text-slate-700">
+                <span className="text-xs sm:text-sm font-semibold text-slate-700">
                   Find jobs faster with SmartJob
                 </span>
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight">
-                Find Your Dream Job <br />
-                With <span className="text-blue-600">SmartJob</span>
+              <h1 className="text-[2.45rem] sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-[1.08] tracking-tight">
+                Find Your Dream Job
+                <span className="block mt-1 sm:mt-2">
+                  With <span className="text-blue-600">SmartJob</span>
+                </span>
               </h1>
 
-              <p className="mt-6 max-w-xl text-base sm:text-lg text-slate-600 leading-relaxed">
+              <p className="mt-5 sm:mt-6 max-w-xl text-sm sm:text-lg text-slate-600 leading-relaxed">
                 Discover thousands of job opportunities with the information you
                 need. Build your future today with a smart and trusted job
                 portal.
               </p>
 
               {/* Search Box */}
-              <div className="mt-8 bg-white rounded-2xl shadow-xl shadow-blue-100/60 border border-gray-100 p-3">
-                <div className="grid md:grid-cols-[1fr_1fr_auto] gap-3">
-                  <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-50">
-                    <Search size={20} className="text-slate-400" />
+              <div className="mt-7 sm:mt-9 bg-white rounded-2xl sm:rounded-3xl shadow-xl shadow-blue-100/50 border border-slate-100 p-2.5 sm:p-3">
+
+                <div className="grid md:grid-cols-[1fr_1fr_auto] gap-2.5 sm:gap-3">
+
+                  <div className="flex items-center gap-3 px-4 py-3.5 rounded-xl sm:rounded-2xl bg-slate-50 border border-transparent focus-within:border-blue-100 focus-within:bg-white transition">
+                    <Search size={19} className="text-slate-400 shrink-0" />
+
                     <input
                       type="text"
                       value={keyword}
@@ -185,8 +194,9 @@ const Home = () => {
                     />
                   </div>
 
-                  <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-50">
-                    <MapPin size={20} className="text-slate-400" />
+                  <div className="flex items-center gap-3 px-4 py-3.5 rounded-xl sm:rounded-2xl bg-slate-50 border border-transparent focus-within:border-blue-100 focus-within:bg-white transition">
+                    <MapPin size={19} className="text-slate-400 shrink-0" />
+
                     <input
                       type="text"
                       value={location}
@@ -199,116 +209,134 @@ const Home = () => {
                   <button
                     type="button"
                     onClick={handleSearch}
-                    className="px-7 py-3 rounded-xl bg-blue-600 text-white text-sm font-semibold shadow-sm hover:bg-blue-700 transition"
+                    className="w-full md:w-auto px-7 py-3.5 rounded-xl sm:rounded-2xl bg-blue-600 text-white text-sm font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 active:scale-[0.98] transition"
                   >
-                    Search Job
+                    Search Jobs
                   </button>
+
                 </div>
               </div>
 
               {/* CTA Buttons */}
-              <div className="mt-6 flex flex-col sm:flex-row gap-3">
+              <div className="mt-5 sm:mt-6 grid grid-cols-2 sm:flex gap-3">
+
                 <Link
                   to="/jobs"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-slate-950 text-white text-sm font-bold hover:bg-blue-600 transition"
+                  className="inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3 rounded-xl bg-slate-950 text-white text-sm font-bold hover:bg-blue-600 active:scale-[0.98] transition"
                 >
                   Browse Jobs
-                  <ArrowRight size={17} />
+                  <ArrowRight size={16} />
                 </Link>
 
                 <Link
                   to="/register"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white border border-gray-100 text-slate-700 text-sm font-bold hover:bg-blue-50 hover:text-blue-600 transition"
+                  className="inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3 rounded-xl bg-white border border-slate-200 text-slate-700 text-sm font-bold hover:bg-blue-50 hover:text-blue-600 active:scale-[0.98] transition"
                 >
                   Join SmartJob
                 </Link>
+
               </div>
 
               {/* Stats */}
-              <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="mt-7 sm:mt-10 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+
                 {stats.map((item, index) => (
                   <div
                     key={index}
-                    className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm"
+                    className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-slate-100 px-4 py-4 sm:p-5 shadow-sm"
                   >
-                    <h3 className="text-2xl font-bold text-blue-600">
+                    <h3 className="text-xl sm:text-2xl font-extrabold text-blue-600">
                       {item.number}
                     </h3>
-                    <p className="mt-1 text-xs font-medium text-slate-500">
+
+                    <p className="mt-1 text-[11px] sm:text-xs font-medium text-slate-500">
                       {item.label}
                     </p>
                   </div>
                 ))}
+
               </div>
+
             </div>
 
             {/* Right Hero Image */}
-            <div className="relative w-full flex justify-center lg:justify-end">
-              <div className="relative w-full max-w-[620px] h-[430px] sm:h-[500px] bg-white rounded-[2rem] lg:rounded-[3rem] border border-gray-100 shadow-2xl shadow-blue-100/60 overflow-hidden">
-                {/* Main Image */}
+            <div className="relative hidden lg:flex w-full justify-end">
+
+              <div className="absolute -top-8 -right-8 w-32 h-32 bg-blue-100 rounded-full blur-2xl" />
+
+              <div className="relative w-full max-w-[620px] h-[520px] bg-white rounded-[3rem] border border-white shadow-2xl shadow-blue-200/50 overflow-hidden">
+
                 <img
                   src="/hero-image-2.jpg"
                   alt="Job search illustration"
                   className="absolute inset-0 w-full h-full object-cover object-center"
                 />
 
-                {/* Light Overlay for Premium Look */}
-                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-blue-50/20" />
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-blue-100/20" />
 
-                {/* Search Icon */}
-                <div className="absolute top-7 right-7 w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white shadow-xl border border-gray-100 flex items-center justify-center z-20">
-                  <Search size={30} className="text-slate-950" />
+                <div className="absolute top-7 right-7 w-16 h-16 rounded-2xl bg-white/95 backdrop-blur shadow-xl border border-white flex items-center justify-center">
+                  <Search size={28} className="text-blue-600" />
                 </div>
 
-                {/* Floating Card */}
-                {/* <div className="absolute left-6 bottom-6 right-6 sm:right-auto sm:w-72 bg-white/95 backdrop-blur-xl rounded-2xl border border-gray-100 shadow-xl p-5 z-20">
+                <div className="absolute left-7 bottom-7 bg-white/95 backdrop-blur-xl rounded-2xl border border-white shadow-xl p-4 w-64">
                   <div className="flex items-center gap-3">
+
                     <div className="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center">
-                      <BriefcaseBusiness size={22} className="text-blue-600" />
+                      <BriefcaseBusiness size={21} className="text-blue-600" />
                     </div>
 
                     <div>
                       <p className="text-sm font-bold text-slate-950">
                         Smart Hiring
                       </p>
+
                       <p className="text-xs text-slate-500">
                         Apply, track, and grow
                       </p>
                     </div>
+
                   </div>
 
-                  <div className="mt-4 flex items-center gap-2 text-xs font-bold text-green-700">
+                  <div className="mt-3 flex items-center gap-2 text-xs font-bold text-green-700">
                     <CheckCircle2 size={15} />
                     Role based job portal
                   </div>
-                </div> */}
+                </div>
+
               </div>
             </div>
+
           </div>
         </div>
       </section>
-            {/* Popular Categories */}
-      <section className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 pb-20">
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
+
+      {/* Popular Categories */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-14 sm:pb-20">
+
+        <div className="flex items-end justify-between gap-4 mb-6 sm:mb-8">
+
           <div>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
               Popular Job Categories
             </h2>
-            <p className="mt-2 text-slate-600">
+
+            <p className="mt-2 text-sm sm:text-base text-slate-600">
               Explore jobs from the most active categories.
             </p>
           </div>
 
           <Link
             to="/jobs"
-            className="flex items-center gap-2 text-blue-600 font-semibold text-sm"
+            className="hidden sm:flex items-center gap-2 text-blue-600 font-semibold text-sm hover:gap-3 transition-all"
           >
             Explore more
             <ArrowRight size={18} />
           </Link>
+
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+
           {categories.map((item, index) => {
             const Icon = item.icon;
 
@@ -316,88 +344,112 @@ const Home = () => {
               <Link
                 to="/jobs"
                 key={index}
-                className="group bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-xl hover:shadow-blue-100/60 transition"
+                className="group bg-white rounded-2xl border border-slate-100 p-4 sm:p-6 shadow-sm hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-100/60 transition-all duration-300"
               >
                 <div
-                  className={`w-12 h-12 rounded-xl ${item.bg} flex items-center justify-center mb-5`}
+                  className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl ${item.bg} flex items-center justify-center mb-4 sm:mb-5`}
                 >
-                  <Icon size={24} className={item.color} />
+                  <Icon size={22} className={item.color} />
                 </div>
 
-                <h3 className="text-lg font-bold text-slate-950">
+                <h3 className="text-base sm:text-lg font-bold text-slate-950">
                   {item.title}
                 </h3>
 
-                <p className="mt-1 text-sm text-slate-500">{item.jobs}</p>
+                <p className="mt-1 text-xs sm:text-sm text-slate-500 leading-relaxed">
+                  {item.jobs}
+                </p>
               </Link>
             );
           })}
+
         </div>
+
+        <Link
+          to="/jobs"
+          className="mt-5 sm:hidden w-full inline-flex items-center justify-center gap-2 text-blue-600 font-semibold text-sm"
+        >
+          Explore more
+          <ArrowRight size={17} />
+        </Link>
+
       </section>
 
       {/* Featured Jobs */}
-      <section className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 pb-20">
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-14 sm:pb-20">
+
+        <div className="flex items-end justify-between gap-4 mb-6 sm:mb-8">
+
           <div>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
               Featured Jobs
             </h2>
-            <p className="mt-2 text-slate-600">
+
+            <p className="mt-2 text-sm sm:text-base text-slate-600">
               Latest opportunities posted by recruiters.
             </p>
           </div>
 
           <Link
             to="/jobs"
-            className="flex items-center gap-2 text-blue-600 font-semibold text-sm"
+            className="hidden sm:flex items-center gap-2 text-blue-600 font-semibold text-sm hover:gap-3 transition-all"
           >
             View all jobs
             <ArrowRight size={18} />
           </Link>
+
         </div>
 
         {latestJobs.length === 0 ? (
-          <div className="bg-white rounded-[2rem] border border-gray-100 p-8 text-center text-slate-500 font-semibold">
+          <div className="bg-white rounded-2xl sm:rounded-[2rem] border border-slate-100 p-8 text-center text-slate-500 font-semibold">
             No jobs available right now.
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
+          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
+
             {latestJobs.map((job) => (
               <div
                 key={job.id}
-                className="bg-white rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-blue-100/50 transition p-6"
+                className="bg-white rounded-2xl sm:rounded-[2rem] border border-slate-100 shadow-sm hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-100/50 transition-all duration-300 p-5 sm:p-6"
               >
+
                 <div className="flex items-start justify-between gap-4">
-                  <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-blue-50 flex items-center justify-center">
-                    <Building2 size={26} className="text-blue-600" />
+
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-blue-50 flex items-center justify-center">
+                    <Building2 size={24} className="text-blue-600" />
                   </div>
 
-                  <span className="px-3 py-1 rounded-full bg-green-50 text-green-700 border border-green-100 text-xs font-bold">
+                  <span className="px-3 py-1 rounded-full bg-green-50 text-green-700 border border-green-100 text-[10px] sm:text-xs font-bold">
                     {job.status || "ACTIVE"}
                   </span>
+
                 </div>
 
-                <h3 className="mt-5 text-xl font-extrabold text-slate-950">
+                <h3 className="mt-5 text-lg sm:text-xl font-extrabold text-slate-950 line-clamp-1">
                   {job.title}
                 </h3>
 
-                <p className="mt-1 text-sm text-slate-500">{job.company}</p>
+                <p className="mt-1 text-sm text-slate-500 line-clamp-1">
+                  {job.company}
+                </p>
 
-                <div className="mt-5 space-y-3 text-sm text-slate-600">
+                <div className="mt-5 space-y-2.5 text-sm text-slate-600">
+
                   <p className="flex items-center gap-2">
-                    <MapPin size={16} className="text-blue-600" />
-                    {job.location}
+                    <MapPin size={16} className="text-blue-600 shrink-0" />
+                    <span className="truncate">{job.location}</span>
                   </p>
 
                   <p className="flex items-center gap-2">
-                    <Clock3 size={16} className="text-orange-600" />
+                    <Clock3 size={16} className="text-orange-600 shrink-0" />
                     {job.jobType || "Not specified"}
                   </p>
 
                   <p className="flex items-center gap-2">
-                    <IndianRupee size={16} className="text-green-600" />
+                    <IndianRupee size={16} className="text-green-600 shrink-0" />
                     {formatSalary(job)}
                   </p>
+
                 </div>
 
                 {job.skills?.length > 0 && (
@@ -415,75 +467,104 @@ const Home = () => {
 
                 <Link
                   to={`/jobDetails/${job.id}`}
-                  className="mt-6 w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-slate-950 text-white text-sm font-bold hover:bg-blue-600 transition"
+                  className="mt-6 w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-slate-950 text-white text-sm font-bold hover:bg-blue-600 active:scale-[0.98] transition"
                 >
                   View Details
                   <ArrowRight size={17} />
                 </Link>
+
               </div>
             ))}
+
           </div>
         )}
+
+        <Link
+          to="/jobs"
+          className="mt-6 sm:hidden w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-blue-100 bg-white text-blue-600 text-sm font-bold"
+        >
+          View all jobs
+          <ArrowRight size={17} />
+        </Link>
+
       </section>
 
       {/* How It Works */}
-      <section className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 pb-20">
-        <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-xl shadow-blue-100/40 p-8 lg:p-10">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-14 sm:pb-20">
+
+        <div className="bg-white rounded-3xl sm:rounded-[2.5rem] border border-slate-100 shadow-lg shadow-blue-100/30 p-5 sm:p-8 lg:p-10">
+
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-100 mb-4">
-              <Sparkles size={16} className="text-blue-600" />
-              <span className="text-sm font-bold text-blue-600">
+
+            <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-blue-50 border border-blue-100 mb-4">
+              <Sparkles size={15} className="text-blue-600" />
+
+              <span className="text-xs sm:text-sm font-bold text-blue-600">
                 Simple Process
               </span>
             </div>
 
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
               How SmartJob Works
             </h2>
 
-            <p className="mt-2 text-slate-600">
+            <p className="mt-2 text-sm sm:text-base text-slate-600">
               A clean flow for candidates and recruiters to manage the complete
               hiring process.
             </p>
+
           </div>
 
-          <div className="mt-8 grid md:grid-cols-3 gap-5">
+          <div className="mt-6 sm:mt-8 grid md:grid-cols-3 gap-3 sm:gap-5">
+
             {steps.map((step, index) => {
               const Icon = step.icon;
 
               return (
                 <div
                   key={index}
-                  className="rounded-[2rem] bg-slate-50 border border-gray-100 p-6"
+                  className="rounded-2xl sm:rounded-[2rem] bg-slate-50 border border-slate-100 p-5 sm:p-6"
                 >
-                  <div className="w-13 h-13 rounded-2xl bg-blue-600 text-white flex items-center justify-center mb-5">
-                    <Icon size={25} />
+
+                  <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-xl sm:rounded-2xl bg-blue-600 text-white flex items-center justify-center mb-4 sm:mb-5">
+                    <Icon size={23} />
                   </div>
 
-                  <h3 className="text-lg font-bold text-slate-950">
+                  <h3 className="text-base sm:text-lg font-bold text-slate-950">
                     {step.title}
                   </h3>
 
                   <p className="mt-2 text-sm text-slate-500 leading-relaxed">
                     {step.description}
                   </p>
+
                 </div>
               );
             })}
+
           </div>
+
         </div>
+
       </section>
 
       {/* Trust Section */}
-      <section className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 pb-20">
-        <div className="bg-white rounded-[2rem] border border-gray-100 shadow-xl shadow-blue-100/40 p-8 lg:p-10">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-14 sm:pb-20">
+
+        <div className="bg-white rounded-3xl sm:rounded-[2rem] border border-slate-100 shadow-lg shadow-blue-100/30 p-5 sm:p-8 lg:p-10">
+
           <div className="grid md:grid-cols-3 gap-6">
+
             <div className="flex gap-4">
-              <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center">
-                <Building2 className="text-blue-600" size={24} />
+              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-blue-50 flex items-center justify-center shrink-0">
+                <Building2 className="text-blue-600" size={22} />
               </div>
+
               <div>
-                <h3 className="font-bold text-slate-950">Top Companies</h3>
+                <h3 className="font-bold text-slate-950">
+                  Top Companies
+                </h3>
+
                 <p className="mt-1 text-sm text-slate-500">
                   Connect with trusted companies hiring actively.
                 </p>
@@ -491,11 +572,15 @@ const Home = () => {
             </div>
 
             <div className="flex gap-4">
-              <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center">
-                <Users className="text-blue-600" size={24} />
+              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-blue-50 flex items-center justify-center shrink-0">
+                <Users className="text-blue-600" size={22} />
               </div>
+
               <div>
-                <h3 className="font-bold text-slate-950">Smart Candidates</h3>
+                <h3 className="font-bold text-slate-950">
+                  Smart Candidates
+                </h3>
+
                 <p className="mt-1 text-sm text-slate-500">
                   Candidates can apply and track applications easily.
                 </p>
@@ -503,58 +588,76 @@ const Home = () => {
             </div>
 
             <div className="flex gap-4">
-              <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center">
-                <ShieldCheck className="text-blue-600" size={24} />
+              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-blue-50 flex items-center justify-center shrink-0">
+                <ShieldCheck className="text-blue-600" size={22} />
               </div>
+
               <div>
-                <h3 className="font-bold text-slate-950">Secure Platform</h3>
+                <h3 className="font-bold text-slate-950">
+                  Secure Platform
+                </h3>
+
                 <p className="mt-1 text-sm text-slate-500">
                   Role-based access for candidates and recruiters.
                 </p>
               </div>
             </div>
+
           </div>
+
         </div>
+
       </section>
 
       {/* Recruiter CTA */}
-      <section className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 pb-20">
-        <div className="relative overflow-hidden rounded-[2.5rem] bg-slate-950 p-8 lg:p-10 text-white shadow-xl shadow-slate-200">
-          <div className="absolute top-0 right-0 w-80 h-80 bg-blue-600/20 rounded-full blur-3xl" />
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-14 sm:pb-20">
 
-          <div className="relative z-10 grid lg:grid-cols-[1fr_auto] gap-8 items-center">
+        <div className="relative overflow-hidden rounded-3xl sm:rounded-[2.5rem] bg-slate-950 p-6 sm:p-8 lg:p-10 text-white shadow-xl shadow-slate-200">
+
+          <div className="absolute top-0 right-0 w-64 sm:w-80 h-64 sm:h-80 bg-blue-600/20 rounded-full blur-3xl" />
+
+          <div className="relative z-10 grid lg:grid-cols-[1fr_auto] gap-6 sm:gap-8 items-center">
+
             <div>
-              <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mb-5">
-                <BriefcaseBusiness size={28} />
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-white/10 flex items-center justify-center mb-4 sm:mb-5">
+                <BriefcaseBusiness size={25} />
               </div>
 
               <h2 className="text-2xl sm:text-3xl font-extrabold">
                 Hiring for your company?
               </h2>
 
-              <p className="mt-3 max-w-2xl text-slate-300 leading-relaxed">
-               Easily post jobs, track applicants, shortlist candidates, and connect with the right talent—all from one powerful hiring dashboard.
+              <p className="mt-3 max-w-2xl text-sm sm:text-base text-slate-300 leading-relaxed">
+                Easily post jobs, track applicants, shortlist candidates, and
+                connect with the right talent—all from one powerful hiring
+                dashboard.
               </p>
             </div>
 
             <Link
               to="/register"
-              className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-2xl bg-white text-slate-950 text-sm font-bold hover:bg-blue-50 transition"
+              className="w-full lg:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl sm:rounded-2xl bg-white text-slate-950 text-sm font-bold hover:bg-blue-50 active:scale-[0.98] transition"
             >
               Start Hiring
               <ArrowRight size={18} />
             </Link>
+
           </div>
+
         </div>
+
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-gray-100 bg-white">
-        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <footer className="border-t border-slate-100 bg-white">
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-7 sm:py-8 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+
           <div>
             <h2 className="text-lg font-extrabold text-slate-950">
               SmartJob Portal
             </h2>
+
             <p className="mt-1 text-sm text-slate-500">
               A full-stack job portal for candidates and recruiters.
             </p>
@@ -564,17 +667,23 @@ const Home = () => {
             <Link to="/jobs" className="hover:text-blue-600 transition">
               Jobs
             </Link>
+
             <Link to="/login" className="hover:text-blue-600 transition">
               Login
             </Link>
+
             <Link to="/register" className="hover:text-blue-600 transition">
               Register
             </Link>
           </div>
+
         </div>
+
       </footer>
+
     </div>
   );
 };
 
 export default Home;
+
