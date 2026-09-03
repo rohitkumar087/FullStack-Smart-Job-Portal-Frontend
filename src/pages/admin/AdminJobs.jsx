@@ -1,39 +1,73 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Navbar from "../../components/Navbar";
-import { getAllJobsAdmin } from "../../services/jobService";
+import { getAllJobs } from "../../services/jobService";
 import { getErrorMessage } from "../../utils/errorMessage";
+
 import {
   BriefcaseBusiness,
   Search,
   MapPin,
-  IndianRupee,
   Building2,
-  UserRound,
+  CalendarDays,
+  IndianRupee,
   Sparkles,
-  RefreshCcw,
-  Filter,
-  Clock3,
-  BadgeCheck,
+  LayoutDashboard,
   Briefcase,
-  Layers,
+  Activity,
+  Filter,
+  RefreshCcw,
   AlertCircle,
+  FileSearch,
+  TrendingUp,
+  ArrowRight,
+  Layers3,
+  BadgeCheck,
+  SlidersHorizontal,
+  X,
 } from "lucide-react";
 
 const AdminJobs = () => {
   const [jobs, setJobs] = useState([]);
   const [search, setSearch] = useState("");
-  const [selectedJobType, setSelectedJobType] = useState("ALL");
+  const [jobType, setJobType] = useState("ALL");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  /* ================= FETCH JOBS ================= */
 
   const fetchJobs = async () => {
     try {
       setLoading(true);
       setError("");
-      const data = await getAllJobsAdmin();
-      setJobs(data || []);
-    } catch (error) {
-      setError(getErrorMessage(error, "Failed to load admin jobs."));
+
+      const response = await getAllJobs();
+
+      console.log("Jobs API Response:", response);
+
+      // Safely extract array from different possible API response structures
+      let jobsData = [];
+
+      if (Array.isArray(response)) {
+        jobsData = response;
+      } else if (Array.isArray(response?.data)) {
+        jobsData = response.data;
+      } else if (Array.isArray(response?.content)) {
+        jobsData = response.content;
+      } else if (Array.isArray(response?.jobs)) {
+        jobsData = response.jobs;
+      } else if (Array.isArray(response?.data?.content)) {
+        jobsData = response.data.content;
+      }
+
+      setJobs(jobsData);
+    } catch (err) {
+      console.error("Error fetching jobs:", err);
+
+      setJobs([]);
+
+      setError(
+        getErrorMessage(err, "Failed to load jobs.")
+      );
     } finally {
       setLoading(false);
     }
@@ -43,298 +77,906 @@ const AdminJobs = () => {
     fetchJobs();
   }, []);
 
+  /* ================= FILTERED JOBS ================= */
+
   const filteredJobs = useMemo(() => {
+    if (!Array.isArray(jobs)) {
+      return [];
+    }
+
     return jobs.filter((job) => {
       const keyword = search.toLowerCase();
 
       const matchesSearch =
-        job.title?.toLowerCase().includes(keyword) ||
-        job.company?.toLowerCase().includes(keyword) ||
-        job.location?.toLowerCase().includes(keyword) ||
-        job.recruiter?.name?.toLowerCase().includes(keyword) ||
-        job.recruiter?.email?.toLowerCase().includes(keyword);
+        job?.title?.toLowerCase().includes(keyword) ||
+        job?.location?.toLowerCase().includes(keyword) ||
+        job?.jobType?.toLowerCase().includes(keyword) ||
+        job?.company?.companyName
+          ?.toLowerCase()
+          .includes(keyword);
 
-      const matchesJobType =
-        selectedJobType === "ALL" || job.jobType === selectedJobType;
+      const matchesType =
+        jobType === "ALL" ||
+        job?.jobType === jobType;
 
-      return matchesSearch && matchesJobType;
+      return matchesSearch && matchesType;
     });
-  }, [jobs, search, selectedJobType]);
+  }, [jobs, search, jobType]);
 
-  const totalFullTime = jobs.filter((job) => job.jobType === "Full Time").length;
-  const totalInternship = jobs.filter(
-    (job) => job.jobType === "Internship"
-  ).length;
+  /* ================= JOB TYPES ================= */
 
-  const jobTypes = ["ALL", ...new Set(jobs.map((job) => job.jobType).filter(Boolean))];
+  const jobTypes = useMemo(() => {
+    if (!Array.isArray(jobs)) {
+      return ["ALL"];
+    }
 
-  const statCards = [
-    {
-      title: "Total Jobs",
-      value: jobs.length,
-      icon: BriefcaseBusiness,
-      bg: "bg-violet-50",
-      color: "text-violet-600",
-    },
-    {
-      title: "Full Time",
-      value: totalFullTime,
-      icon: Briefcase,
-      bg: "bg-blue-50",
-      color: "text-blue-600",
-    },
-    {
-      title: "Internships",
-      value: totalInternship,
-      icon: Clock3,
-      bg: "bg-green-50",
-      color: "text-green-600",
-    },
-    {
-      title: "Companies",
-      value: new Set(jobs.map((job) => job.company).filter(Boolean)).size,
-      icon: Building2,
-      bg: "bg-orange-50",
-      color: "text-orange-600",
-    },
-  ];
+    const types = jobs
+      .map((job) => job?.jobType)
+      .filter(Boolean);
+
+    return ["ALL", ...new Set(types)];
+  }, [jobs]);
+
+  /* ================= CLEAR FILTER ================= */
+
+  const clearFilters = () => {
+    setSearch("");
+    setJobType("ALL");
+  };
 
   return (
-    <div className="min-h-screen bg-[#f8fbff] text-slate-950">
+    <div className="min-h-screen bg-[#f6f9ff] text-slate-950 overflow-hidden">
       <Navbar />
 
-      <main className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <section className="relative bg-white rounded-[2rem] border border-gray-100 shadow-xl shadow-blue-100/40 p-6 sm:p-8 overflow-hidden mb-8">
-          <div className="absolute -top-24 -right-20 w-80 h-80 bg-violet-50 rounded-full blur-3xl" />
-          <div className="absolute -bottom-24 -left-24 w-72 h-72 bg-blue-50 rounded-full blur-3xl" />
+      {/* ================= BACKGROUND EFFECTS ================= */}
 
-          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-            <div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-50 border border-violet-100 mb-5">
-                <Sparkles size={16} className="text-violet-600" />
-                <span className="text-sm font-bold text-violet-600">
-                  Admin Job Monitoring
-                </span>
-              </div>
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute -top-52 left-[8%] w-[520px] h-[520px] rounded-full bg-blue-500/10 blur-[180px]" />
 
-              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-                Monitor All Posted Jobs
-              </h1>
+        <div className="absolute top-[20%] -right-60 w-[600px] h-[600px] rounded-full bg-indigo-500/10 blur-[190px]" />
 
-              <p className="mt-3 max-w-2xl text-slate-600 leading-relaxed">
-                View all jobs posted by recruiters, track company hiring
-                activity, and monitor job data across the platform.
-              </p>
-            </div>
+        <div className="absolute bottom-[-280px] left-[30%] w-[600px] h-[600px] rounded-full bg-cyan-500/10 blur-[190px]" />
+      </div>
 
-            <button
-              onClick={fetchJobs}
-              className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-slate-950 text-white text-sm font-bold hover:bg-blue-600 transition"
-            >
-              <RefreshCcw size={18} />
-              Refresh
-            </button>
+      <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
+
+        {/* ================= HERO SECTION ================= */}
+
+        <section
+          className="
+            relative overflow-hidden
+            rounded-[2rem] sm:rounded-[2.5rem]
+            bg-white/85 backdrop-blur-xl
+            border border-white
+            shadow-[0_25px_80px_rgba(37,99,235,0.10)]
+            mb-7 sm:mb-9
+          "
+        >
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute -top-32 -right-24 w-96 h-96 rounded-full bg-blue-500/10 blur-3xl" />
+
+            <div className="absolute -bottom-36 -left-24 w-80 h-80 rounded-full bg-indigo-500/10 blur-3xl" />
+
+            <div className="hidden lg:block absolute top-10 right-[28%] w-16 h-16 rounded-[1.5rem] border border-blue-200 rotate-[25deg]" />
+
+            <div className="hidden lg:block absolute bottom-12 right-[10%] w-12 h-12 rounded-xl bg-indigo-500/10 rotate-[30deg]" />
           </div>
-        </section>
 
-        {error && (
-          <div className="mb-8 flex items-center gap-3 rounded-2xl border border-red-100 bg-red-50 px-5 py-4 text-sm font-semibold text-red-700">
-            <AlertCircle size={18} />
-            {error}
-          </div>
-        )}
+          <div className="relative p-6 sm:p-8 lg:p-10">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
 
-        {/* Stats */}
-        <section className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-          {statCards.map((item, index) => {
-            const Icon = item.icon;
+              {/* LEFT */}
 
-            return (
-              <div
-                key={index}
-                className="bg-white rounded-[1.7rem] border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-blue-100/50 transition p-6"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-semibold text-slate-500">
-                      {item.title}
-                    </p>
+              <div className="max-w-2xl">
+                <div
+                  className="
+                    inline-flex items-center gap-2
+                    px-4 py-2
+                    rounded-full
+                    bg-blue-50
+                    border border-blue-100
+                  "
+                >
+                  <Sparkles
+                    size={16}
+                    className="text-blue-600"
+                  />
 
-                    <h3 className="mt-2 text-3xl font-extrabold">
-                      {item.value}
-                    </h3>
+                  <span className="text-xs sm:text-sm font-black text-blue-700">
+                    Job Portal Administration
+                  </span>
+                </div>
+
+                <h1 className="mt-5 text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
+                  Monitor every job
+
+                  <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500">
+                    posted on the platform.
+                  </span>
+                </h1>
+
+                <p className="mt-4 max-w-xl text-sm sm:text-base text-slate-500 leading-relaxed">
+                  Explore job listings across the SmartJob platform,
+                  monitor recruiter activity, and review opportunities
+                  available to candidates.
+                </p>
+
+                <div className="mt-7 flex flex-wrap gap-3">
+                  <div
+                    className="
+                      inline-flex items-center gap-3
+                      px-4 py-3
+                      rounded-2xl
+                      bg-blue-50/80
+                      border border-blue-100
+                    "
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center">
+                      <BriefcaseBusiness
+                        size={19}
+                        className="text-blue-600"
+                      />
+                    </div>
+
+                    <div>
+                      <p className="text-[11px] font-bold text-blue-500 uppercase">
+                        Total Jobs
+                      </p>
+
+                      <p className="text-sm font-black text-slate-900">
+                        {jobs.length} Active Listings
+                      </p>
+                    </div>
                   </div>
 
                   <div
-                    className={`w-14 h-14 rounded-2xl ${item.bg} flex items-center justify-center`}
+                    className="
+                      inline-flex items-center gap-3
+                      px-4 py-3
+                      rounded-2xl
+                      bg-indigo-50/80
+                      border border-indigo-100
+                    "
                   >
-                    <Icon size={26} className={item.color} />
+                    <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center">
+                      <Activity
+                        size={19}
+                        className="text-indigo-600"
+                      />
+                    </div>
+
+                    <div>
+                      <p className="text-[11px] font-bold text-indigo-500 uppercase">
+                        Platform
+                      </p>
+
+                      <p className="text-sm font-black text-slate-900">
+                        Job Monitoring
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
-            );
-          })}
+
+              {/* RIGHT 3D ICON */}
+
+              <div className="flex flex-col lg:items-center gap-5">
+
+                <div className="hidden lg:flex relative w-36 h-36 items-center justify-center">
+                  <div className="absolute inset-0 rounded-[2.7rem] bg-blue-500/15 rotate-6 translate-y-3" />
+
+                  <div
+                    className="
+                      absolute inset-2
+                      rounded-[2.5rem]
+                      bg-gradient-to-br
+                      from-blue-500
+                      via-indigo-600
+                      to-cyan-500
+                      shadow-2xl shadow-blue-500/25
+                      rotate-[-6deg]
+                      transition-transform duration-500
+                      hover:rotate-0
+                      hover:scale-105
+                    "
+                  />
+
+                  <div
+                    className="
+                      relative
+                      w-24 h-24
+                      rounded-[2rem]
+                      bg-white
+                      shadow-xl
+                      flex items-center justify-center
+                    "
+                  >
+                    <BriefcaseBusiness
+                      size={46}
+                      className="text-blue-600"
+                    />
+                  </div>
+                </div>
+
+                <button
+                  onClick={fetchJobs}
+                  disabled={loading}
+                  className="
+                    group
+                    inline-flex items-center justify-center gap-2
+                    px-6 py-3.5
+                    rounded-2xl
+                    bg-slate-950
+                    text-white
+                    text-sm
+                    font-black
+                    shadow-xl shadow-slate-950/10
+                    transition-all duration-300
+                    hover:-translate-y-1
+                    hover:bg-blue-600
+                    disabled:opacity-60
+                  "
+                >
+                  <RefreshCcw
+                    size={18}
+                    className={
+                      loading
+                        ? "animate-spin"
+                        : "transition-transform duration-300 group-hover:rotate-180"
+                    }
+                  />
+
+                  {loading
+                    ? "Refreshing..."
+                    : "Refresh Jobs"}
+                </button>
+              </div>
+            </div>
+          </div>
         </section>
 
-        {/* Filters */}
-        <section className="bg-white rounded-[2rem] border border-gray-100 shadow-xl shadow-blue-100/40 p-5 sm:p-6 mb-8">
+        {/* ================= ERROR ================= */}
+
+        {error && (
+          <div
+            className="
+              mb-7
+              flex items-start gap-3
+              rounded-[1.6rem]
+              border border-red-100
+              bg-red-50
+              px-5 py-4
+              text-sm
+              font-semibold
+              text-red-700
+            "
+          >
+            <div className="w-10 h-10 shrink-0 rounded-xl bg-red-100 flex items-center justify-center">
+              <AlertCircle size={19} />
+            </div>
+
+            <div>
+              <p className="font-black">
+                Unable to load jobs
+              </p>
+
+              <p className="mt-1 opacity-80">
+                {error}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* ================= STAT CARDS ================= */}
+
+        <section className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 mb-7 sm:mb-9">
+
+          {/* TOTAL JOBS */}
+
+          <div
+            className="
+              group relative overflow-hidden
+              rounded-[1.8rem]
+              bg-white
+              border border-white
+              shadow-lg shadow-blue-500/5
+              p-6
+              transition-all duration-300
+              hover:-translate-y-1.5
+              hover:shadow-xl hover:shadow-blue-500/10
+            "
+          >
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-bold text-slate-500">
+                  Total Jobs
+                </p>
+
+                <h3 className="mt-2 text-4xl font-black">
+                  {jobs.length}
+                </h3>
+
+                <p className="mt-2 text-xs text-slate-400">
+                  Available listings
+                </p>
+              </div>
+
+              <div className="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center group-hover:scale-110 transition">
+                <BriefcaseBusiness
+                  size={28}
+                  className="text-blue-600"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* JOB TYPES */}
+
+          <div
+            className="
+              group
+              rounded-[1.8rem]
+              bg-white
+              border border-white
+              shadow-lg shadow-indigo-500/5
+              p-6
+              transition-all duration-300
+              hover:-translate-y-1.5
+              hover:shadow-xl
+            "
+          >
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-bold text-slate-500">
+                  Job Types
+                </p>
+
+                <h3 className="mt-2 text-4xl font-black">
+                  {jobTypes.length - 1}
+                </h3>
+
+                <p className="mt-2 text-xs text-slate-400">
+                  Different categories
+                </p>
+              </div>
+
+              <div className="w-16 h-16 rounded-2xl bg-indigo-50 flex items-center justify-center group-hover:scale-110 transition">
+                <Layers3
+                  size={28}
+                  className="text-indigo-600"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* FILTERED JOBS */}
+
+          <div
+            className="
+              group
+              rounded-[1.8rem]
+              bg-white
+              border border-white
+              shadow-lg shadow-cyan-500/5
+              p-6
+              transition-all duration-300
+              hover:-translate-y-1.5
+              hover:shadow-xl
+            "
+          >
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-bold text-slate-500">
+                  Visible Jobs
+                </p>
+
+                <h3 className="mt-2 text-4xl font-black">
+                  {filteredJobs.length}
+                </h3>
+
+                <p className="mt-2 text-xs text-slate-400">
+                  Matching filters
+                </p>
+              </div>
+
+              <div className="w-16 h-16 rounded-2xl bg-cyan-50 flex items-center justify-center group-hover:scale-110 transition">
+                <FileSearch
+                  size={28}
+                  className="text-cyan-600"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* STATUS */}
+
+          <div
+            className="
+              group
+              rounded-[1.8rem]
+              bg-white
+              border border-white
+              shadow-lg shadow-emerald-500/5
+              p-6
+              transition-all duration-300
+              hover:-translate-y-1.5
+              hover:shadow-xl
+            "
+          >
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-bold text-slate-500">
+                  Admin Status
+                </p>
+
+                <h3 className="mt-2 text-xl font-black">
+                  Monitoring
+                </h3>
+
+                <p className="mt-2 text-xs text-slate-400">
+                  Platform overview
+                </p>
+              </div>
+
+              <div className="w-16 h-16 rounded-2xl bg-emerald-50 flex items-center justify-center group-hover:scale-110 transition">
+                <BadgeCheck
+                  size={28}
+                  className="text-emerald-600"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ================= SEARCH FILTER ================= */}
+
+        <section
+          className="
+            rounded-[2rem]
+            bg-white/90
+            backdrop-blur-xl
+            border border-white
+            shadow-xl shadow-blue-500/5
+            p-5 sm:p-7
+            mb-7 sm:mb-9
+          "
+        >
+          <div className="mb-6">
+            <div className="flex items-center gap-2 text-blue-600">
+              <SlidersHorizontal size={17} />
+
+              <span className="text-xs font-black uppercase tracking-[0.15em]">
+                Job Filters
+              </span>
+            </div>
+
+            <h2 className="mt-2 text-xl sm:text-2xl font-black">
+              Search & Filter Jobs
+            </h2>
+
+            <p className="mt-1 text-sm text-slate-500">
+              Find jobs by title, company, location or job type.
+            </p>
+          </div>
+
           <div className="grid lg:grid-cols-[1fr_260px] gap-4">
+
+            {/* SEARCH */}
+
             <div className="relative">
               <Search
                 size={20}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
               />
 
               <input
                 type="text"
-                placeholder="Search by title, company, recruiter, email or location..."
+                placeholder="Search job title, company or location..."
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-slate-50 border border-gray-100 outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-50 text-sm font-semibold"
+                onChange={(e) =>
+                  setSearch(e.target.value)
+                }
+                className="
+                  w-full
+                  pl-12 pr-4 py-4
+                  rounded-2xl
+                  bg-slate-50
+                  border border-slate-100
+                  outline-none
+                  text-sm
+                  font-semibold
+                  text-slate-700
+                  placeholder:text-slate-400
+                  transition-all duration-300
+                  focus:bg-white
+                  focus:border-blue-300
+                  focus:ring-4
+                  focus:ring-blue-50
+                "
               />
             </div>
 
+            {/* JOB TYPE */}
+
             <div className="relative">
               <Filter
-                size={20}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+                size={18}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
               />
 
               <select
-                value={selectedJobType}
-                onChange={(e) => setSelectedJobType(e.target.value)}
-                className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-slate-50 border border-gray-100 outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-50 text-sm font-bold appearance-none"
+                value={jobType}
+                onChange={(e) =>
+                  setJobType(e.target.value)
+                }
+                className="
+                  w-full
+                  appearance-none
+                  pl-12 pr-4 py-4
+                  rounded-2xl
+                  bg-slate-50
+                  border border-slate-100
+                  outline-none
+                  text-sm
+                  font-bold
+                  text-slate-700
+                  cursor-pointer
+                  transition-all
+                  focus:bg-white
+                  focus:border-blue-300
+                  focus:ring-4
+                  focus:ring-blue-50
+                "
               >
                 {jobTypes.map((type) => (
-                  <option key={type} value={type}>
-                    {type === "ALL" ? "All Job Types" : type}
+                  <option
+                    key={type}
+                    value={type}
+                  >
+                    {type === "ALL"
+                      ? "All Job Types"
+                      : type}
                   </option>
                 ))}
               </select>
             </div>
           </div>
+
+          {(search || jobType !== "ALL") && (
+            <div className="mt-4 flex justify-end">
+              <button
+                onClick={clearFilters}
+                className="
+                  inline-flex items-center gap-2
+                  px-4 py-2.5
+                  rounded-xl
+                  bg-slate-100
+                  text-slate-600
+                  text-sm font-bold
+                  hover:bg-red-50
+                  hover:text-red-600
+                  transition
+                "
+              >
+                <X size={16} />
+
+                Clear Filters
+              </button>
+            </div>
+          )}
         </section>
 
-        {/* Jobs List */}
-        <section className="bg-white rounded-[2rem] border border-gray-100 shadow-xl shadow-blue-100/40 p-6">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+        {/* ================= JOB LIST ================= */}
+
+        <section
+          className="
+            rounded-[2rem] sm:rounded-[2.5rem]
+            bg-white/90
+            backdrop-blur-xl
+            border border-white
+            shadow-xl shadow-blue-500/5
+            p-5 sm:p-7 lg:p-8
+          "
+        >
+          {/* HEADER */}
+
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-7">
             <div>
-              <h2 className="text-2xl font-extrabold">All Jobs</h2>
-              <p className="text-sm text-slate-500 mt-1">
-                Showing {filteredJobs.length} of {jobs.length} jobs
+              <div className="flex items-center gap-2 text-blue-600">
+                <LayoutDashboard size={17} />
+
+                <span className="text-xs font-black uppercase tracking-[0.15em]">
+                  Job Directory
+                </span>
+              </div>
+
+              <h2 className="mt-2 text-2xl sm:text-3xl font-black">
+                All Platform Jobs
+              </h2>
+
+              <p className="mt-2 text-sm text-slate-500">
+                Showing{" "}
+                <span className="font-black text-slate-700">
+                  {filteredJobs.length}
+                </span>{" "}
+                of{" "}
+                <span className="font-black text-slate-700">
+                  {jobs.length}
+                </span>{" "}
+                available jobs
               </p>
             </div>
 
             {loading && (
-              <span className="px-4 py-2 rounded-full bg-blue-50 text-blue-700 text-sm font-bold border border-blue-100">
-                Loading...
-              </span>
+              <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-sm font-black">
+                <div className="w-2.5 h-2.5 rounded-full bg-blue-600 animate-pulse" />
+
+                Loading Jobs...
+              </div>
             )}
           </div>
 
-          {filteredJobs.length === 0 ? (
-            <div className="text-center py-16">
-              <div className="w-20 h-20 mx-auto rounded-3xl bg-slate-50 flex items-center justify-center mb-4">
-                <BriefcaseBusiness size={36} className="text-slate-400" />
+          {/* EMPTY STATE */}
+
+          {!loading && filteredJobs.length === 0 ? (
+            <div className="py-16 sm:py-20 text-center">
+              <div className="relative w-24 h-24 mx-auto mb-6">
+                <div className="absolute inset-0 rounded-[2rem] bg-blue-500/10 rotate-6" />
+
+                <div className="relative w-full h-full rounded-[2rem] bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 flex items-center justify-center">
+                  <BriefcaseBusiness
+                    size={40}
+                    className="text-blue-600"
+                  />
+                </div>
               </div>
 
-              <h3 className="text-xl font-bold">No jobs found</h3>
+              <h3 className="text-xl sm:text-2xl font-black">
+                No jobs found
+              </h3>
 
-              <p className="mt-2 text-sm text-slate-500">
-                Try changing search keyword or selected job type.
+              <p className="mt-2 max-w-md mx-auto text-sm text-slate-500">
+                There are no jobs matching your current search
+                or filter selection.
               </p>
+
+              {(search || jobType !== "ALL") && (
+                <button
+                  onClick={clearFilters}
+                  className="
+                    mt-6
+                    inline-flex items-center gap-2
+                    px-5 py-3
+                    rounded-xl
+                    bg-blue-600
+                    text-white
+                    text-sm
+                    font-bold
+                    shadow-lg shadow-blue-500/20
+                    hover:-translate-y-0.5
+                    hover:bg-blue-700
+                    transition
+                  "
+                >
+                  Clear Filters
+
+                  <ArrowRight size={16} />
+                </button>
+              )}
             </div>
           ) : (
-            <div className="grid xl:grid-cols-2 gap-5">
-              {filteredJobs.map((job) => (
+            /* ================= JOB CARDS ================= */
+
+            <div className="grid xl:grid-cols-2 gap-5 sm:gap-6">
+              {filteredJobs.map((job, index) => (
                 <div
-                  key={job.id}
-                  className="group rounded-[1.7rem] border border-gray-100 bg-slate-50/70 p-5 hover:bg-white hover:shadow-xl hover:shadow-blue-100/40 transition"
+                  key={job?.id || index}
+                  className="
+                    group
+                    relative
+                    overflow-hidden
+                    rounded-[1.8rem]
+                    bg-blue-50/35
+                    border border-blue-100/70
+                    p-5 sm:p-6
+                    transition-all duration-300
+                    hover:-translate-y-1.5
+                    hover:bg-white
+                    hover:border-white
+                    hover:shadow-[0_22px_55px_rgba(37,99,235,0.13)]
+                  "
                 >
-                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-5">
+                  <div className="absolute -right-16 -top-16 w-36 h-36 rounded-full bg-blue-500/10 blur-3xl group-hover:scale-150 transition-transform duration-500" />
+
+                  <div className="relative">
+
+                    {/* JOB HEADER */}
+
                     <div className="flex gap-4">
-                      <div className="w-14 h-14 rounded-2xl bg-violet-50 flex items-center justify-center shrink-0">
-                        <BriefcaseBusiness
-                          size={25}
-                          className="text-violet-600"
+                      <div
+                        className="
+                          shrink-0
+                          w-14 h-14 sm:w-16 sm:h-16
+                          rounded-2xl
+                          bg-gradient-to-br
+                          from-blue-500
+                          via-indigo-600
+                          to-cyan-500
+                          shadow-lg shadow-blue-500/20
+                          flex items-center justify-center
+                          transition-all duration-300
+                          group-hover:scale-110
+                          group-hover:-rotate-3
+                        "
+                      >
+                        <Briefcase
+                          size={27}
+                          className="text-white"
                         />
                       </div>
 
-                      <div>
-                        <div className="flex flex-wrap items-center gap-3">
-                          <h3 className="font-extrabold text-lg text-slate-950">
-                            {job.title}
-                          </h3>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-start justify-between gap-3">
+                          <div>
+                            <h3 className="text-lg sm:text-xl font-black text-slate-950 break-words">
+                              {job?.title || "Job Title"}
+                            </h3>
 
-                          <span className="px-3 py-1 rounded-full border text-xs font-bold bg-green-50 text-green-700 border-green-100">
-                            {job.status || "ACTIVE"}
+                            <div className="mt-2 flex items-center gap-2 text-sm text-slate-500">
+                              <Building2
+                                size={15}
+                                className="text-slate-400"
+                              />
+
+                              <span className="font-semibold">
+                                {job?.company?.companyName ||
+                                  job?.companyName ||
+                                  "Company"}
+                              </span>
+                            </div>
+                          </div>
+
+                          {job?.jobType && (
+                            <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-[11px] font-black whitespace-nowrap">
+                              {job.jobType}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="mt-4 flex items-center gap-2">
+                          <MapPin
+                            size={15}
+                            className="text-slate-400"
+                          />
+
+                          <p className="text-sm text-slate-500">
+                            {job?.location ||
+                              "Location not specified"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* DESCRIPTION */}
+
+                    {job?.description && (
+                      <div className="mt-5 rounded-2xl bg-white/75 border border-blue-100 p-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <FileSearch
+                            size={15}
+                            className="text-blue-600"
+                          />
+
+                          <span className="text-xs font-black uppercase tracking-wide text-slate-400">
+                            Job Description
                           </span>
                         </div>
 
-                        <p className="mt-2 flex items-center gap-1.5 text-sm text-slate-500">
-                          <Building2 size={14} />
-                          {job.company || "Company not available"}
-                        </p>
-
-                        <p className="mt-1 flex items-center gap-1.5 text-sm text-slate-500">
-                          <MapPin size={14} />
-                          {job.location || "Location not available"}
-                        </p>
-
-                        <p className="mt-1 flex items-center gap-1.5 text-sm text-slate-500">
-                          <IndianRupee size={14} />₹{job.minSalary} - ₹
-                          {job.maxSalary}
-                        </p>
-
-                        <p className="mt-1 flex items-center gap-1.5 text-sm text-slate-500">
-                          <UserRound size={14} />
-                          Posted by: {job.recruiter?.name || "Recruiter"}
+                        <p className="text-sm text-slate-600 leading-relaxed">
+                          {job.description}
                         </p>
                       </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-5 flex flex-wrap gap-3">
-                    {job.jobType && (
-                      <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-100 text-xs font-bold">
-                        {job.jobType}
-                      </span>
                     )}
 
-                    {job.experience && (
-                      <span className="px-3 py-1 rounded-full bg-orange-50 text-orange-700 border border-orange-100 text-xs font-bold">
-                        {job.experience}
-                      </span>
-                    )}
+                    {/* JOB DETAILS */}
 
-                    {job.openings && (
-                      <span className="px-3 py-1 rounded-full bg-violet-50 text-violet-700 border border-violet-100 text-xs font-bold">
-                        {job.openings} Openings
-                      </span>
-                    )}
-                  </div>
+                    <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-3">
 
-                  {job.description && (
-                    <div className="mt-5 rounded-2xl bg-white/80 border border-gray-100 p-4">
-                      <p className="text-xs font-bold text-slate-500 mb-1">
-                        Job Description
-                      </p>
-                      <p className="text-sm text-slate-600 leading-relaxed line-clamp-3">
-                        {job.description}
-                      </p>
+                      {/* SALARY */}
+
+                      <div className="rounded-2xl bg-white/80 border border-slate-100 p-3.5">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center">
+                            <IndianRupee
+                              size={15}
+                              className="text-emerald-600"
+                            />
+                          </div>
+
+                          <div className="min-w-0">
+                            <p className="text-[10px] font-black uppercase text-slate-400">
+                              Salary
+                            </p>
+
+                            <p className="mt-0.5 text-xs font-bold text-slate-700 truncate">
+                              {job?.salary ||
+                                "Not specified"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* EXPERIENCE */}
+
+                      <div className="rounded-2xl bg-white/80 border border-slate-100 p-3.5">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+                            <TrendingUp
+                              size={15}
+                              className="text-blue-600"
+                            />
+                          </div>
+
+                          <div className="min-w-0">
+                            <p className="text-[10px] font-black uppercase text-slate-400">
+                              Experience
+                            </p>
+
+                            <p className="mt-0.5 text-xs font-bold text-slate-700 truncate">
+                              {job?.experience ||
+                                "Not specified"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* POSTED DATE */}
+
+                      <div className="rounded-2xl bg-white/80 border border-slate-100 p-3.5">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-lg bg-violet-50 flex items-center justify-center">
+                            <CalendarDays
+                              size={15}
+                              className="text-violet-600"
+                            />
+                          </div>
+
+                          <div className="min-w-0">
+                            <p className="text-[10px] font-black uppercase text-slate-400">
+                              Posted
+                            </p>
+
+                            <p className="mt-0.5 text-xs font-bold text-slate-700 truncate">
+                              {job?.createdAt
+                                ? new Date(
+                                    job.createdAt
+                                  ).toLocaleDateString()
+                                : "Recently"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  )}
 
-                  <div className="mt-5 flex items-center justify-between pt-4 border-t border-gray-100">
-                    <div className="flex items-center gap-2 text-sm text-slate-500">
-                      <Layers size={16} />
-                      Job ID: #{job.id}
-                    </div>
+                    {/* FOOTER */}
 
-                    <div className="flex items-center gap-2 text-sm font-bold text-green-600">
-                      <BadgeCheck size={16} />
-                      Monitored
+                    <div className="mt-5 pt-5 border-t border-blue-100/70 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                      <div className="flex items-center gap-2 text-xs text-slate-400">
+                        <Activity
+                          size={15}
+                          className="text-blue-500"
+                        />
+
+                        <span className="font-semibold">
+                          Platform Job Listing
+                        </span>
+                      </div>
+
+                      <div className="inline-flex items-center gap-2 text-xs font-black text-blue-600 group-hover:translate-x-1 transition-transform">
+                        Job Details
+
+                        <ArrowRight size={15} />
+                      </div>
                     </div>
                   </div>
                 </div>

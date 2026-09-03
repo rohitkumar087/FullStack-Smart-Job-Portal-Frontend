@@ -7,7 +7,6 @@ import {
   IndianRupee,
   GraduationCap,
   FileText,
-  ListChecks,
   Sparkles,
   Send,
   Tags,
@@ -97,7 +96,7 @@ const PostJob = () => {
         requirements: convertToList(formData.requirements),
       };
 
-      const result = await createJob(payload);
+      await createJob(payload);
 
       setSuccess("Job posted successfully.");
 
@@ -129,6 +128,15 @@ const PostJob = () => {
     return "Not disclosed";
   };
 
+  const inputClass =
+    "w-full min-w-0 bg-transparent border-0 outline-none ring-0 focus:outline-none focus:ring-0 text-sm sm:text-base text-slate-700 placeholder:text-slate-400";
+
+  const selectClass =
+    "w-full min-w-0 h-full appearance-none bg-transparent border-0 outline-none ring-0 focus:outline-none focus:ring-0 text-sm sm:text-base text-slate-700 pl-12 pr-12 py-3.5 cursor-pointer";
+
+  const textareaClass =
+    "w-full min-w-0 resize-y rounded-2xl bg-slate-50/80 border border-slate-100 px-4 py-4 outline-none ring-0 focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-300 focus:bg-white transition-all duration-300 text-sm sm:text-base text-slate-700 placeholder:text-slate-400";
+
   return (
     <div className="min-h-screen bg-[#f6f9ff] text-slate-950 overflow-hidden">
       <Navbar />
@@ -136,12 +144,13 @@ const PostJob = () => {
       {/* Background Glow */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="absolute -top-40 left-[5%] w-[500px] h-[500px] rounded-full bg-blue-500/10 blur-[140px]" />
+
         <div className="absolute top-[25%] -right-52 w-[500px] h-[500px] rounded-full bg-indigo-500/10 blur-[150px]" />
+
         <div className="absolute bottom-0 left-[30%] w-[400px] h-[400px] rounded-full bg-cyan-400/5 blur-[140px]" />
       </div>
 
       <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
-
         {/* Header */}
         <section
           className="
@@ -153,18 +162,18 @@ const PostJob = () => {
             shadow-[0_25px_70px_rgba(37,99,235,0.08)]
           "
         >
-          {/* Decorative Background */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute -top-28 -right-20 w-72 h-72 rounded-full bg-blue-500/10 blur-3xl" />
+
             <div className="absolute -bottom-28 left-[40%] w-64 h-64 rounded-full bg-indigo-500/10 blur-3xl" />
 
             <div className="hidden lg:block absolute right-[12%] top-8 w-20 h-20 border border-blue-300/20 rounded-[2rem] rotate-[20deg]" />
+
             <div className="hidden lg:block absolute right-[28%] bottom-6 w-12 h-12 bg-indigo-500/5 border border-indigo-500/10 rounded-2xl rotate-[25deg]" />
           </div>
 
           <div className="relative p-6 sm:p-8 lg:p-10">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-7">
-
               <div className="max-w-2xl">
                 <div
                   className="
@@ -183,6 +192,7 @@ const PostJob = () => {
 
                 <h1 className="mt-5 text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
                   Create your next
+
                   <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600">
                     great opportunity.
                   </span>
@@ -196,6 +206,7 @@ const PostJob = () => {
                 <div className="mt-6 flex flex-wrap gap-3">
                   <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-100">
                     <BriefcaseBusiness size={17} className="text-blue-600" />
+
                     <span className="text-xs sm:text-sm font-bold text-slate-600">
                       Professional Job Post
                     </span>
@@ -203,6 +214,7 @@ const PostJob = () => {
 
                   <div className="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-100">
                     <Users size={17} className="text-indigo-600" />
+
                     <span className="text-xs sm:text-sm font-bold text-slate-600">
                       Reach the right candidates
                     </span>
@@ -286,9 +298,7 @@ const PostJob = () => {
           onSubmit={handleSubmit}
           className="grid xl:grid-cols-[minmax(0,1fr)_360px] gap-7 sm:gap-8"
         >
-          {/* Main Form */}
           <div className="space-y-6 sm:space-y-7">
-
             {/* Basic Information */}
             <section
               className="
@@ -307,48 +317,38 @@ const PostJob = () => {
               />
 
               <div className="grid md:grid-cols-2 gap-5 mt-7">
-
                 <div className="md:col-span-2">
-                  <InputField
-                    label="Job Title"
-                    icon={BriefcaseBusiness}
-                  >
+                  <InputField label="Job Title" icon={BriefcaseBusiness}>
                     <input
                       type="text"
                       name="title"
                       value={formData.title}
                       onChange={handleChange}
                       placeholder="Java Backend Developer"
-                      className="input-field"
+                      className={inputClass}
                     />
                   </InputField>
                 </div>
 
-                <InputField
-                  label="Company Name"
-                  icon={Building2}
-                >
+                <InputField label="Company Name" icon={Building2}>
                   <input
                     type="text"
                     name="company"
                     value={formData.company}
                     onChange={handleChange}
                     placeholder="Tech Solutions Inc."
-                    className="input-field"
+                    className={inputClass}
                   />
                 </InputField>
 
-                <InputField
-                  label="Job Location"
-                  icon={MapPin}
-                >
+                <InputField label="Job Location" icon={MapPin}>
                   <input
                     type="text"
                     name="location"
                     value={formData.location}
                     onChange={handleChange}
                     placeholder="Bangalore, India"
-                    className="input-field"
+                    className={inputClass}
                   />
                 </InputField>
               </div>
@@ -372,16 +372,12 @@ const PostJob = () => {
               />
 
               <div className="grid md:grid-cols-2 gap-5 mt-7">
-
-                <SelectField
-                  label="Job Type"
-                  icon={Clock3}
-                >
+                <SelectField label="Job Type" icon={Clock3}>
                   <select
                     name="jobType"
                     value={formData.jobType}
                     onChange={handleChange}
-                    className="select-field"
+                    className={selectClass}
                   >
                     <option>Full Time</option>
                     <option>Part Time</option>
@@ -399,7 +395,7 @@ const PostJob = () => {
                     name="experience"
                     value={formData.experience}
                     onChange={handleChange}
-                    className="select-field"
+                    className={selectClass}
                   >
                     <option>Fresher</option>
                     <option>1 - 3 Years</option>
@@ -408,45 +404,36 @@ const PostJob = () => {
                   </select>
                 </SelectField>
 
-                <InputField
-                  label="Minimum Salary"
-                  icon={IndianRupee}
-                >
+                <InputField label="Minimum Salary" icon={IndianRupee}>
                   <input
                     type="number"
                     name="minSalary"
                     value={formData.minSalary}
                     onChange={handleChange}
                     placeholder="500000"
-                    className="input-field"
+                    className={inputClass}
                   />
                 </InputField>
 
-                <InputField
-                  label="Maximum Salary"
-                  icon={IndianRupee}
-                >
+                <InputField label="Maximum Salary" icon={IndianRupee}>
                   <input
                     type="number"
                     name="maxSalary"
                     value={formData.maxSalary}
                     onChange={handleChange}
                     placeholder="1000000"
-                    className="input-field"
+                    className={inputClass}
                   />
                 </InputField>
 
-                <InputField
-                  label="Number of Openings"
-                  icon={Users}
-                >
+                <InputField label="Number of Openings" icon={Users}>
                   <input
                     type="number"
                     name="openings"
                     value={formData.openings}
                     onChange={handleChange}
                     placeholder="5"
-                    className="input-field"
+                    className={inputClass}
                   />
                 </InputField>
               </div>
@@ -470,17 +457,14 @@ const PostJob = () => {
               />
 
               <div className="mt-7">
-                <InputField
-                  label="Skills"
-                  icon={Tags}
-                >
+                <InputField label="Skills" icon={Tags}>
                   <input
                     type="text"
                     name="skills"
                     value={formData.skills}
                     onChange={handleChange}
                     placeholder="Java, Spring Boot, MySQL"
-                    className="input-field"
+                    className={inputClass}
                   />
                 </InputField>
               </div>
@@ -531,7 +515,6 @@ const PostJob = () => {
               />
 
               <div className="mt-7 space-y-6">
-
                 <TextAreaField label="Job Description">
                   <textarea
                     rows="7"
@@ -539,7 +522,7 @@ const PostJob = () => {
                     value={formData.description}
                     onChange={handleChange}
                     placeholder="Write a detailed job description..."
-                    className="textarea-field"
+                    className={textareaClass}
                   />
                 </TextAreaField>
 
@@ -553,7 +536,7 @@ const PostJob = () => {
                     value={formData.responsibilities}
                     onChange={handleChange}
                     placeholder="Build APIs, Work with MySQL, Write clean code"
-                    className="textarea-field"
+                    className={textareaClass}
                   />
                 </TextAreaField>
 
@@ -567,7 +550,7 @@ const PostJob = () => {
                     value={formData.requirements}
                     onChange={handleChange}
                     placeholder="Good Java knowledge, Spring Boot basics, SQL understanding"
-                    className="textarea-field"
+                    className={textareaClass}
                   />
                 </TextAreaField>
               </div>
@@ -636,7 +619,6 @@ const PostJob = () => {
 
           {/* Desktop Sidebar */}
           <aside className="hidden xl:block space-y-6">
-
             <div className="sticky top-24">
               <JobPreview
                 formData={formData}
@@ -656,6 +638,7 @@ const PostJob = () => {
                 "
               >
                 <div className="absolute -top-16 -right-16 w-40 h-40 bg-blue-500/20 rounded-full blur-3xl" />
+
                 <div className="absolute -bottom-20 -left-16 w-40 h-40 bg-indigo-500/15 rounded-full blur-3xl" />
 
                 <div className="relative">
@@ -667,7 +650,10 @@ const PostJob = () => {
                       backdrop-blur-md
                     "
                   >
-                    <CheckCircle2 size={24} className="text-blue-300" />
+                    <CheckCircle2
+                      size={24}
+                      className="text-blue-300"
+                    />
                   </div>
 
                   <h2 className="mt-5 text-xl font-black">
@@ -676,7 +662,9 @@ const PostJob = () => {
 
                   <div className="mt-5 space-y-4">
                     <Tip text="Use a clear and searchable job title." />
+
                     <Tip text="Add a salary range to attract more candidates." />
+
                     <Tip text="Mention skills and experience requirements clearly." />
                   </div>
                 </div>
@@ -747,6 +735,7 @@ const InputField = ({
       <div
         className="
           group flex items-center gap-3
+          w-full
           bg-slate-50/80
           rounded-2xl
           px-4 py-3.5
@@ -763,8 +752,9 @@ const InputField = ({
           size={19}
           className="
             shrink-0 text-slate-400
-            transition-colors duration-300
+            transition-all duration-300
             group-focus-within:text-blue-600
+            group-focus-within:scale-110
           "
         />
 
@@ -788,6 +778,7 @@ const SelectField = ({
       <div
         className="
           group relative
+          w-full overflow-hidden
           bg-slate-50/80
           rounded-2xl
           border border-slate-100
@@ -799,23 +790,26 @@ const SelectField = ({
           hover:border-blue-100
         "
       >
+        {/* Left Icon */}
         <div className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 z-10">
           <Icon
             size={19}
             className="
               text-slate-400
-              transition-colors
+              transition-all duration-300
               group-focus-within:text-blue-600
+              group-focus-within:scale-110
             "
           />
         </div>
 
         {children}
 
-        <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2">
+        {/* Right Arrow */}
+        <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 z-10">
           <ArrowRight
             size={16}
-            className="rotate-90 text-slate-400"
+            className="rotate-90 text-slate-400 transition-transform duration-300 group-focus-within:translate-y-0.5"
           />
         </div>
       </div>
@@ -1033,7 +1027,10 @@ const Tip = ({ text }) => {
           flex items-center justify-center
         "
       >
-        <CheckCircle2 size={15} className="text-blue-300" />
+        <CheckCircle2
+          size={15}
+          className="text-blue-300"
+        />
       </div>
 
       <p className="text-sm text-slate-300 leading-relaxed">
@@ -1044,4 +1041,3 @@ const Tip = ({ text }) => {
 };
 
 export default PostJob;
-

@@ -2,21 +2,24 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../services/jobService";
 import { getErrorMessage } from "../utils/errorMessage";
+
 import {
   BriefcaseBusiness,
   Mail,
   LockKeyhole,
   ArrowRight,
-  ShieldCheck,
-  Sparkles,
-  Users,
-  Building2,
   Eye,
   EyeOff,
+  Sparkles,
+  ShieldCheck,
+  AlertCircle,
+  CheckCircle2,
+  Search,
+  FileCheck2,
+  Building2,
 } from "lucide-react";
 
 const Login = () => {
-
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -26,6 +29,7 @@ const Login = () => {
 
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -38,6 +42,7 @@ const Login = () => {
     e.preventDefault();
 
     setError("");
+    setLoading(true);
 
     try {
       const data = await loginUser(formData);
@@ -56,185 +61,422 @@ const Login = () => {
       }
     } catch (err) {
       setError(getErrorMessage(err, "Invalid email or password"));
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#f7faff] text-slate-950 flex items-center justify-center px-4 sm:px-6 py-5 sm:py-10">
+    <div className="relative min-h-screen overflow-hidden bg-slate-50 flex items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
+      {/* Background */}
 
-      <div className="w-full max-w-6xl bg-white sm:rounded-[2rem] lg:rounded-[2.5rem] sm:border sm:border-slate-100 sm:shadow-2xl sm:shadow-blue-100/60 overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute -top-40 -left-40 w-[420px] h-[420px] rounded-full bg-blue-400/10 blur-[120px]" />
 
-        <div className="grid lg:grid-cols-2">
+        <div className="absolute top-[10%] -right-40 w-[450px] h-[450px] rounded-full bg-indigo-400/10 blur-[130px]" />
 
-          {/* Left Branding Section - Desktop Only */}
-          <div className="relative hidden lg:block bg-slate-950 text-white p-12 overflow-hidden">
+        <div className="absolute -bottom-48 left-[25%] w-[500px] h-[500px] rounded-full bg-cyan-400/10 blur-[140px]" />
 
-            {/* Background Effects */}
-            <div className="absolute -top-24 -right-24 w-96 h-96 bg-blue-600/25 rounded-full blur-3xl" />
-            <div className="absolute -bottom-28 -left-28 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl" />
+        <div
+          className="
+            absolute inset-0 opacity-[0.025]
+            bg-[linear-gradient(rgba(15,23,42,0.7)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.7)_1px,transparent_1px)]
+            bg-[size:42px_42px]
+          "
+        />
 
-            <div className="relative z-10 h-full flex flex-col justify-between gap-16">
+        <div className="hidden lg:block absolute top-[15%] left-[7%] w-16 h-16 rounded-2xl border border-blue-200/70 rotate-[25deg]" />
+
+        <div className="hidden lg:block absolute bottom-[14%] right-[8%] w-20 h-20 rounded-full border border-indigo-200/70" />
+      </div>
+
+      {/* Main Container */}
+
+      <div className="relative z-10 w-full max-w-6xl">
+        {/* Desktop 3D layers */}
+
+        <div className="hidden lg:block absolute inset-0 rounded-[2.5rem] bg-blue-100/60 rotate-[1.2deg] translate-y-3 translate-x-2" />
+
+        <div className="hidden lg:block absolute inset-0 rounded-[2.5rem] bg-indigo-100/50 -rotate-[0.8deg] translate-y-2 -translate-x-2" />
+
+        {/* Mobile 3D layers */}
+
+        <div className="lg:hidden absolute inset-0 rounded-[2.5rem] bg-blue-100/70 rotate-[2deg] translate-y-3 translate-x-2" />
+
+        <div className="lg:hidden absolute inset-0 rounded-[2.5rem] bg-indigo-100/60 -rotate-[1.5deg] translate-y-2 -translate-x-2" />
+
+        <div
+          className="
+            relative
+            overflow-hidden
+            rounded-[2.5rem]
+            bg-white
+            border border-white
+            shadow-[0_30px_80px_rgba(15,23,42,0.12)]
+            lg:grid
+            lg:grid-cols-[1fr_1fr]
+            lg:min-h-[650px]
+          "
+        >
+          {/* ================= DESKTOP BRANDING SECTION ================= */}
+
+          <div
+            className="
+              relative
+              hidden
+              lg:flex
+              overflow-hidden
+              flex-col
+              justify-between
+              p-10
+              xl:p-12
+              text-white
+              bg-gradient-to-br
+              from-slate-950
+              via-slate-900
+              to-indigo-950
+            "
+          >
+            {/* Subtle background glow */}
+
+            <div className="absolute -top-32 -right-32 w-80 h-80 rounded-full bg-blue-500/15 blur-[100px]" />
+
+            <div className="absolute -bottom-40 -left-32 w-96 h-96 rounded-full bg-indigo-500/15 blur-[120px]" />
+
+            <div
+              className="
+                absolute inset-0 opacity-[0.04]
+                bg-[linear-gradient(rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.8)_1px,transparent_1px)]
+                bg-[size:45px_45px]
+              "
+            />
+
+            {/* Decorative 3D shapes */}
+
+            <div className="absolute top-24 right-16 w-16 h-16 rounded-2xl border border-white/10 bg-white/[0.04] rotate-[20deg] shadow-2xl" />
+
+            <div className="absolute bottom-32 right-20 w-12 h-12 rounded-xl bg-blue-400/10 border border-blue-300/10 rotate-[35deg]" />
+
+            {/* Top Logo */}
+
+            <div className="relative z-10 flex items-center gap-3">
+              <div className="relative">
+                <div className="absolute inset-0 translate-y-1.5 translate-x-1 rounded-2xl bg-black/40" />
+
+                <div
+                  className="
+                    relative
+                    w-14 h-14
+                    rounded-2xl
+                    bg-gradient-to-br
+                    from-blue-500
+                    to-indigo-600
+                    flex
+                    items-center
+                    justify-center
+                    shadow-xl
+                    shadow-blue-950/40
+                  "
+                >
+                  <BriefcaseBusiness size={27} />
+                </div>
+              </div>
 
               <div>
+                <h1 className="text-2xl font-black tracking-tight">
+                  Smart<span className="text-blue-400">Job</span>
+                </h1>
 
-                {/* Logo */}
-                <div className="flex items-center gap-3 mb-14">
-
-                  <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-900/30">
-                    <BriefcaseBusiness size={25} />
-                  </div>
-
-                  <h1 className="text-2xl font-extrabold tracking-tight">
-                    Smart<span className="text-blue-400">Job</span>
-                  </h1>
-
-                </div>
-
-                {/* Badge */}
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/10 backdrop-blur-sm mb-7">
-
-                  <Sparkles size={16} className="text-blue-300" />
-
-                  <span className="text-sm font-semibold text-blue-100">
-                    Welcome back
-                  </span>
-
-                </div>
-
-                <h2 className="text-5xl font-extrabold leading-[1.1] tracking-tight max-w-lg">
-                  Login to manage your
-                  <span className="block text-blue-400 mt-2">
-                    career journey.
-                  </span>
-                </h2>
-
-                <p className="mt-6 text-slate-300 leading-relaxed max-w-md">
-                  Access jobs, applications, dashboards, and recruiter tools
-                  from one clean and secure SmartJob Portal.
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Your career starts here
                 </p>
+              </div>
+            </div>
 
+            {/* Main text */}
+
+            <div className="relative z-10 my-auto pt-10">
+              <div
+                className="
+                  inline-flex
+                  items-center
+                  gap-2
+                  px-3.5
+                  py-2
+                  rounded-full
+                  bg-white/[0.06]
+                  border
+                  border-white/10
+                  backdrop-blur-md
+                "
+              >
+                <Sparkles size={15} className="text-blue-300" />
+
+                <span className="text-xs font-bold text-blue-100">
+                  Smart opportunities. Better careers.
+                </span>
               </div>
 
-              {/* Feature Cards */}
-              <div className="grid grid-cols-3 gap-3">
+              <h2
+                className="
+                  mt-7
+                  max-w-md
+                  text-5xl
+                  xl:text-[3.5rem]
+                  leading-[1.08]
+                  font-black
+                  tracking-tight
+                "
+              >
+                Build your career.
 
-                <div className="rounded-2xl bg-white/[0.07] border border-white/10 p-4 backdrop-blur-sm">
+                <span className="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-300">
+                  Move forward.
+                </span>
+              </h2>
 
-                  <div className="w-10 h-10 rounded-xl bg-blue-500/15 flex items-center justify-center">
-                    <Users size={21} className="text-blue-300" />
+              <p className="mt-6 max-w-md text-sm leading-7 text-slate-400">
+                Discover meaningful opportunities, connect with companies,
+                and manage your professional journey from one simple platform.
+              </p>
+
+              {/* Feature List */}
+
+              <div className="mt-9 space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-white/[0.07] border border-white/10 flex items-center justify-center">
+                    <Search size={17} className="text-blue-300" />
                   </div>
 
-                  <h3 className="mt-4 font-bold text-sm">
-                    Candidates
-                  </h3>
+                  <div>
+                    <p className="text-sm font-bold text-white">
+                      Discover the right opportunities
+                    </p>
 
-                  <p className="mt-1 text-xs leading-relaxed text-slate-400">
-                    Apply and track jobs
-                  </p>
-
+                    <p className="text-xs text-slate-400 mt-0.5">
+                      Find jobs that match your skills.
+                    </p>
+                  </div>
                 </div>
 
-                <div className="rounded-2xl bg-white/[0.07] border border-white/10 p-4 backdrop-blur-sm">
-
-                  <div className="w-10 h-10 rounded-xl bg-blue-500/15 flex items-center justify-center">
-                    <Building2 size={21} className="text-blue-300" />
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-white/[0.07] border border-white/10 flex items-center justify-center">
+                    <FileCheck2 size={17} className="text-indigo-300" />
                   </div>
 
-                  <h3 className="mt-4 font-bold text-sm">
-                    Recruiters
-                  </h3>
+                  <div>
+                    <p className="text-sm font-bold text-white">
+                      Track your applications
+                    </p>
 
-                  <p className="mt-1 text-xs leading-relaxed text-slate-400">
-                    Manage hiring easily
-                  </p>
-
+                    <p className="text-xs text-slate-400 mt-0.5">
+                      Stay updated throughout your journey.
+                    </p>
+                  </div>
                 </div>
 
-                <div className="rounded-2xl bg-white/[0.07] border border-white/10 p-4 backdrop-blur-sm">
-
-                  <div className="w-10 h-10 rounded-xl bg-blue-500/15 flex items-center justify-center">
-                    <ShieldCheck size={21} className="text-blue-300" />
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-white/[0.07] border border-white/10 flex items-center justify-center">
+                    <Building2 size={17} className="text-cyan-300" />
                   </div>
 
-                  <h3 className="mt-4 font-bold text-sm">
-                    Secure
-                  </h3>
+                  <div>
+                    <p className="text-sm font-bold text-white">
+                      Connect with companies
+                    </p>
 
-                  <p className="mt-1 text-xs leading-relaxed text-slate-400">
-                    Role based access
-                  </p>
-
+                    <p className="text-xs text-slate-400 mt-0.5">
+                      Explore opportunities from recruiters.
+                    </p>
+                  </div>
                 </div>
-
               </div>
+            </div>
 
+            {/* Bottom trust */}
+
+            <div className="relative z-10 flex items-center gap-2 text-xs text-slate-400">
+              <ShieldCheck size={16} className="text-blue-400" />
+
+              <span>Secure access to your professional workspace</span>
             </div>
           </div>
 
-          {/* Right Login Form */}
-          <div className="relative p-0 sm:p-8 lg:p-12">
+          {/* ================= LOGIN SECTION ================= */}
 
-            {/* Mobile Background Decoration */}
-            <div className="absolute top-0 right-0 lg:hidden w-52 h-52 bg-blue-100/60 rounded-full blur-3xl -z-0" />
+          <div
+            className="
+              relative
+              flex
+              items-center
+              px-6
+              py-8
+              sm:px-10
+              sm:py-10
+              lg:px-10
+              xl:px-14
+              bg-white
+            "
+          >
+            <div className="absolute -top-24 -right-24 w-64 h-64 rounded-full bg-blue-500/5 blur-[90px] pointer-events-none" />
 
-            <div className="relative z-10 max-w-md mx-auto py-5 sm:py-4 lg:py-8">
+            <div className="absolute -bottom-32 -left-24 w-64 h-64 rounded-full bg-indigo-500/5 blur-[100px] pointer-events-none" />
 
-              {/* Mobile Logo */}
-              <div className="flex lg:hidden items-center gap-3 mb-10">
+            <div className="relative z-10 w-full max-w-md mx-auto">
+              {/* MOBILE LOGO */}
 
-                <div className="w-11 h-11 rounded-2xl bg-slate-950 text-white flex items-center justify-center shadow-lg shadow-slate-200">
-                  <BriefcaseBusiness size={22} />
+              <div className="flex lg:hidden justify-center">
+                <div className="flex items-center gap-3">
+                  <div className="relative">
+                    <div className="absolute inset-0 translate-y-1.5 rounded-2xl bg-blue-200" />
+
+                    <div
+                      className="
+                        relative
+                        w-14 h-14
+                        rounded-2xl
+                        bg-gradient-to-br
+                        from-blue-500
+                        to-indigo-600
+                        text-white
+                        flex
+                        items-center
+                        justify-center
+                        shadow-lg
+                        shadow-blue-500/20
+                      "
+                    >
+                      <BriefcaseBusiness size={27} />
+                    </div>
+                  </div>
+
+                  <div>
+                    <h1 className="text-2xl font-black tracking-tight text-slate-950">
+                      Smart<span className="text-blue-600">Job</span>
+                    </h1>
+
+                    <p className="text-xs text-slate-400 mt-0.5">
+                      Your career starts here
+                    </p>
+                  </div>
                 </div>
-
-                <h1 className="text-xl font-extrabold tracking-tight">
-                  Smart<span className="text-blue-600">Job</span>
-                </h1>
-
               </div>
 
-              {/* Form Heading */}
-              <div className="mb-8 sm:mb-10">
+              {/* Header */}
 
-                <div className="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-5">
-                  <LockKeyhole size={25} className="text-blue-600" />
+              <div className="mt-10 lg:mt-0">
+                <div
+                  className="
+                    inline-flex
+                    items-center
+                    gap-2
+                    px-3.5
+                    py-2
+                    rounded-full
+                    bg-blue-50
+                    border
+                    border-blue-100
+                  "
+                >
+                  <Sparkles size={14} className="text-blue-600" />
+
+                  <span className="text-xs font-bold text-blue-700">
+                    Welcome back
+                  </span>
                 </div>
 
-                <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-                  Welcome back
+                <h2 className="mt-5 text-3xl sm:text-4xl font-black tracking-tight text-slate-950">
+                  Login to your account
                 </h2>
 
-                <p className="mt-2 text-sm sm:text-base text-slate-500 leading-relaxed">
-                  Enter your credentials to access your SmartJob account.
+                <p className="mt-3 text-sm leading-6 text-slate-500">
+                  Enter your details to continue your professional journey.
                 </p>
-
               </div>
 
-              {/* Error */}
+              {/* ERROR */}
+
               {error && (
-                <div className="mb-6 flex items-start gap-3 rounded-2xl bg-red-50 border border-red-100 px-4 py-3.5 text-sm font-semibold text-red-600">
+                <div
+                  className="
+                    mt-7
+                    flex
+                    items-start
+                    gap-3
+                    rounded-2xl
+                    bg-red-50
+                    border
+                    border-red-100
+                    px-4
+                    py-4
+                  "
+                >
+                  <div className="w-9 h-9 shrink-0 rounded-xl bg-red-100 flex items-center justify-center">
+                    <AlertCircle size={18} className="text-red-600" />
+                  </div>
 
-                  <div className="w-2 h-2 rounded-full bg-red-500 mt-1.5 shrink-0" />
+                  <div>
+                    <p className="text-sm font-black text-red-700">
+                      Login failed
+                    </p>
 
-                  <span>{error}</span>
-
+                    <p className="mt-1 text-xs leading-5 text-red-500">
+                      {error}
+                    </p>
+                  </div>
                 </div>
               )}
 
-              <form className="space-y-5" onSubmit={handleSubmit}>
+              {/* FORM */}
 
-                {/* Email */}
+              <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+                {/* EMAIL */}
+
                 <div>
-
-                  <label className="block text-sm font-bold text-slate-700 mb-2">
+                  <label className="block mb-2.5 text-sm font-bold text-slate-700">
                     Email Address
                   </label>
 
-                  <div className="group flex items-center gap-3 bg-slate-50 rounded-2xl px-4 py-4 border border-slate-200 focus-within:border-blue-300 focus-within:bg-white focus-within:ring-4 focus-within:ring-blue-50 transition-all">
-
-                    <Mail
-                      size={20}
-                      className="text-slate-400 group-focus-within:text-blue-600 transition"
-                    />
+                  <div
+                    className="
+                      group
+                      flex
+                      items-center
+                      gap-3
+                      rounded-2xl
+                      border
+                      border-slate-200
+                      bg-slate-50
+                      px-4
+                      py-3.5
+                      transition-all
+                      duration-300
+                      focus-within:bg-white
+                      focus-within:border-blue-400
+                      focus-within:ring-4
+                      focus-within:ring-blue-50
+                    "
+                  >
+                    <div
+                      className="
+                        w-10 h-10 shrink-0 rounded-xl
+                        bg-white border border-slate-100
+                        flex items-center justify-center
+                        shadow-sm
+                        transition-all duration-300
+                        group-focus-within:bg-blue-600
+                        group-focus-within:border-blue-600
+                      "
+                    >
+                      <Mail
+                        size={18}
+                        className="
+                          text-slate-400
+                          transition-colors duration-300
+                          group-focus-within:text-white
+                        "
+                      />
+                    </div>
 
                     <input
                       type="email"
@@ -242,37 +484,68 @@ const Login = () => {
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="Enter your email"
-                      className="w-full bg-transparent outline-none text-sm text-slate-700 placeholder:text-slate-400"
+                      required
+                      className="
+                        min-w-0
+                        flex-1
+                        bg-transparent
+                        outline-none
+                        text-sm
+                        font-medium
+                        text-slate-700
+                        placeholder:text-slate-400
+                      "
                     />
-
                   </div>
-
                 </div>
 
-                {/* Password */}
+                {/* PASSWORD */}
+
                 <div>
+                  <label className="block mb-2.5 text-sm font-bold text-slate-700">
+                    Password
+                  </label>
 
-                  <div className="flex items-center justify-between mb-2">
-
-                    <label className="block text-sm font-bold text-slate-700">
-                      Password
-                    </label>
-
-                    <button
-                      type="button"
-                      className="text-xs font-bold text-blue-600 hover:text-blue-700 transition"
+                  <div
+                    className="
+                      group
+                      flex
+                      items-center
+                      gap-3
+                      rounded-2xl
+                      border
+                      border-slate-200
+                      bg-slate-50
+                      px-4
+                      py-3.5
+                      transition-all
+                      duration-300
+                      focus-within:bg-white
+                      focus-within:border-blue-400
+                      focus-within:ring-4
+                      focus-within:ring-blue-50
+                    "
+                  >
+                    <div
+                      className="
+                        w-10 h-10 shrink-0 rounded-xl
+                        bg-white border border-slate-100
+                        flex items-center justify-center
+                        shadow-sm
+                        transition-all duration-300
+                        group-focus-within:bg-indigo-600
+                        group-focus-within:border-indigo-600
+                      "
                     >
-                      {/* Forgot Password? */}
-                    </button>
-
-                  </div>
-
-                  <div className="group flex items-center gap-3 bg-slate-50 rounded-2xl px-4 py-4 border border-slate-200 focus-within:border-blue-300 focus-within:bg-white focus-within:ring-4 focus-within:ring-blue-50 transition-all">
-
-                    <LockKeyhole
-                      size={20}
-                      className="text-slate-400 group-focus-within:text-blue-600 transition shrink-0"
-                    />
+                      <LockKeyhole
+                        size={18}
+                        className="
+                          text-slate-400
+                          transition-colors duration-300
+                          group-focus-within:text-white
+                        "
+                      />
+                    </div>
 
                     <input
                       type={showPassword ? "text" : "password"}
@@ -280,13 +553,31 @@ const Login = () => {
                       value={formData.password}
                       onChange={handleChange}
                       placeholder="Enter your password"
-                      className="w-full bg-transparent outline-none text-sm text-slate-700 placeholder:text-slate-400"
+                      required
+                      className="
+                        min-w-0
+                        flex-1
+                        bg-transparent
+                        outline-none
+                        text-sm
+                        font-medium
+                        text-slate-700
+                        placeholder:text-slate-400
+                      "
                     />
 
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="text-slate-400 hover:text-blue-600 transition shrink-0"
+                      className="
+                        w-10 h-10 shrink-0
+                        rounded-xl
+                        flex items-center justify-center
+                        text-slate-400
+                        hover:bg-blue-50
+                        hover:text-blue-600
+                        transition-all duration-300
+                      "
                       aria-label="Toggle password visibility"
                     >
                       {showPassword ? (
@@ -295,44 +586,80 @@ const Login = () => {
                         <Eye size={19} />
                       )}
                     </button>
-
                   </div>
-
                 </div>
 
-                {/* Submit */}
+                {/* LOGIN BUTTON */}
+
                 <button
                   type="submit"
-                  className="w-full inline-flex items-center justify-center gap-2 py-4 rounded-2xl bg-blue-600 text-white text-sm font-bold hover:bg-blue-700 active:scale-[0.98] transition-all shadow-lg shadow-blue-200"
+                  disabled={loading}
+                  className="
+                    group
+                    relative
+                    w-full
+                    overflow-hidden
+                    rounded-2xl
+                    bg-slate-950
+                    py-4
+                    text-sm
+                    font-black
+                    text-white
+                    shadow-lg
+                    shadow-slate-950/15
+                    transition-all
+                    duration-300
+                    hover:-translate-y-1
+                    hover:bg-blue-600
+                    hover:shadow-xl
+                    hover:shadow-blue-500/20
+                    active:scale-[0.99]
+                    disabled:opacity-60
+                    disabled:cursor-not-allowed
+                    disabled:hover:translate-y-0
+                  "
                 >
-                  Login
-                  <ArrowRight size={18} />
-                </button>
+                  <span className="relative flex items-center justify-center gap-3">
+                    {loading ? "Logging in..." : "Login to your account"}
 
+                    {!loading && (
+                      <ArrowRight
+                        size={18}
+                        className="transition-transform duration-300 group-hover:translate-x-1"
+                      />
+                    )}
+                  </span>
+                </button>
               </form>
 
-              {/* Register */}
-              <p className="mt-8 text-center text-sm text-slate-500">
+              {/* FOOTER */}
 
-                Don&apos;t have an account?{" "}
+              <div className="mt-8 pt-6 border-t border-slate-100 text-center">
+                <p className="text-sm text-slate-500">
+                  Don't have an account?{" "}
+                  <Link
+                    to="/register"
+                    className="
+                      font-black
+                      text-blue-600
+                      transition
+                      hover:text-indigo-600
+                    "
+                  >
+                    Create account
+                  </Link>
+                </p>
 
-                <Link
-                  className="font-bold text-blue-600 hover:text-blue-700 transition"
-                  to="/register"
-                >
-                  Register now
-                </Link>
+                <div className="mt-5 flex items-center justify-center gap-2 text-[11px] text-slate-400">
+                  <ShieldCheck size={14} className="text-blue-500" />
 
-              </p>
-
+                  <span>Secure and protected access</span>
+                </div>
+              </div>
             </div>
-
           </div>
-
         </div>
-
       </div>
-
     </div>
   );
 };

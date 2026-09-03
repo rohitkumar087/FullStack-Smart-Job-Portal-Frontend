@@ -1,18 +1,16 @@
 import { useState } from "react";
 import { registerUser } from "../services/jobService";
 import { getErrorMessage } from "../utils/errorMessage";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+
 import {
   BriefcaseBusiness,
   UserRound,
   Mail,
-  Phone,
   LockKeyhole,
   ArrowRight,
   ShieldCheck,
   Sparkles,
-  Users,
-  Building2,
   Eye,
   EyeOff,
   UserPlus,
@@ -20,14 +18,17 @@ import {
   MapPin,
   Globe,
   FileText,
+  Building2,
+  Search,
+  FileCheck2,
+  CheckCircle2,
+  AlertCircle,
 } from "lucide-react";
-import { Link } from "react-router-dom";
 
 const Register = () => {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
-    // phone: "",
     role: "CANDIDATE",
     companyName: "",
     companyWebsite: "",
@@ -43,6 +44,12 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -51,11 +58,6 @@ const Register = () => {
       [name]: type === "checkbox" ? checked : value,
     });
   };
-
-  const navigate = useNavigate();
-
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -86,6 +88,8 @@ const Register = () => {
       }
     }
 
+    setLoading(true);
+
     try {
       const payload = {
         name: formData.fullName,
@@ -100,7 +104,7 @@ const Register = () => {
           : null,
       };
 
-      const result = await registerUser(payload);
+      await registerUser(payload);
 
       setSuccess("Account created successfully. Please login.");
 
@@ -113,213 +117,374 @@ const Register = () => {
       } else {
         setError(getErrorMessage(err, "Registration failed"));
       }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#f7faff] text-slate-950 flex items-center justify-center px-4 sm:px-6 py-5 sm:py-10">
+    <div className="relative min-h-screen overflow-hidden bg-slate-50 flex items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
+      {/* ================= BACKGROUND ================= */}
 
-      <div className="w-full max-w-6xl bg-white sm:rounded-[2rem] lg:rounded-[2.5rem] sm:border sm:border-slate-100 sm:shadow-2xl sm:shadow-blue-100/60 overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute -top-40 -left-40 w-[420px] h-[420px] rounded-full bg-blue-400/10 blur-[120px]" />
 
-        <div className="grid lg:grid-cols-2">
+        <div className="absolute top-[10%] -right-40 w-[450px] h-[450px] rounded-full bg-indigo-400/10 blur-[130px]" />
 
-          {/* Left Branding Section - Desktop Only */}
-          <div className="relative hidden lg:block bg-slate-950 text-white p-12 overflow-hidden">
+        <div className="absolute -bottom-48 left-[25%] w-[500px] h-[500px] rounded-full bg-cyan-400/10 blur-[140px]" />
 
-            <div className="absolute -top-24 -right-24 w-96 h-96 bg-blue-600/25 rounded-full blur-3xl" />
-            <div className="absolute -bottom-28 -left-28 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl" />
+        <div
+          className="
+            absolute inset-0 opacity-[0.025]
+            bg-[linear-gradient(rgba(15,23,42,0.7)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.7)_1px,transparent_1px)]
+            bg-[size:42px_42px]
+          "
+        />
 
-            <div className="relative z-10 h-full flex flex-col justify-between gap-16">
+        <div className="hidden lg:block absolute top-[15%] left-[7%] w-16 h-16 rounded-2xl border border-blue-200/70 rotate-[25deg]" />
+
+        <div className="hidden lg:block absolute bottom-[14%] right-[8%] w-20 h-20 rounded-full border border-indigo-200/70" />
+      </div>
+
+      {/* ================= MAIN CONTAINER ================= */}
+
+      <div className="relative z-10 w-full max-w-6xl">
+        {/* Desktop 3D layers */}
+
+        <div className="hidden lg:block absolute inset-0 rounded-[2.5rem] bg-blue-100/60 rotate-[1.2deg] translate-y-3 translate-x-2" />
+
+        <div className="hidden lg:block absolute inset-0 rounded-[2.5rem] bg-indigo-100/50 -rotate-[0.8deg] translate-y-2 -translate-x-2" />
+
+        {/* Mobile 3D layers */}
+
+        <div className="lg:hidden absolute inset-0 rounded-[2.5rem] bg-blue-100/70 rotate-[2deg] translate-y-3 translate-x-2" />
+
+        <div className="lg:hidden absolute inset-0 rounded-[2.5rem] bg-indigo-100/60 -rotate-[1.5deg] translate-y-2 -translate-x-2" />
+
+        <div
+          className="
+            relative overflow-hidden
+            rounded-[2.5rem]
+            bg-white
+            border border-white
+            shadow-[0_30px_80px_rgba(15,23,42,0.12)]
+            lg:grid lg:grid-cols-[0.95fr_1.05fr]
+          "
+        >
+          {/* ================= DESKTOP BRANDING ================= */}
+
+          <div
+            className="
+              relative hidden lg:flex
+              overflow-hidden
+              flex-col
+              justify-between
+              p-10 xl:p-12
+              text-white
+              bg-gradient-to-br
+              from-slate-950
+              via-slate-900
+              to-indigo-950
+            "
+          >
+            {/* Background effects */}
+
+            <div className="absolute -top-32 -right-32 w-80 h-80 rounded-full bg-blue-500/15 blur-[100px]" />
+
+            <div className="absolute -bottom-40 -left-32 w-96 h-96 rounded-full bg-indigo-500/15 blur-[120px]" />
+
+            <div
+              className="
+                absolute inset-0 opacity-[0.04]
+                bg-[linear-gradient(rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.8)_1px,transparent_1px)]
+                bg-[size:45px_45px]
+              "
+            />
+
+            {/* Decorative elements */}
+
+            <div className="absolute top-24 right-16 w-16 h-16 rounded-2xl border border-white/10 bg-white/[0.04] rotate-[20deg] shadow-2xl" />
+
+            <div className="absolute bottom-32 right-20 w-12 h-12 rounded-xl bg-blue-400/10 border border-blue-300/10 rotate-[35deg]" />
+
+            {/* Logo */}
+
+            <div className="relative z-10 flex items-center gap-3">
+              <div className="relative">
+                <div className="absolute inset-0 translate-y-1.5 translate-x-1 rounded-2xl bg-black/40" />
+
+                <div
+                  className="
+                    relative
+                    w-14 h-14
+                    rounded-2xl
+                    bg-gradient-to-br
+                    from-blue-500
+                    to-indigo-600
+                    flex items-center justify-center
+                    shadow-xl shadow-blue-950/40
+                  "
+                >
+                  <BriefcaseBusiness size={27} />
+                </div>
+              </div>
 
               <div>
-
-                {/* Logo */}
-                <div className="flex items-center gap-3 mb-14">
-
-                  <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-900/30">
-                    <BriefcaseBusiness size={25} />
-                  </div>
-
-                  <h1 className="text-2xl font-extrabold tracking-tight">
-                    Smart<span className="text-blue-400">Job</span>
-                  </h1>
-
-                </div>
-
-                {/* Badge */}
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/10 backdrop-blur-sm mb-7">
-
-                  <Sparkles size={16} className="text-blue-300" />
-
-                  <span className="text-sm font-semibold text-blue-100">
-                    Create your account
-                  </span>
-
-                </div>
-
-                <h2 className="text-5xl font-extrabold leading-[1.1] tracking-tight max-w-lg">
-                  Start your journey
-                  <span className="block text-blue-400 mt-2">
-                    with SmartJob.
-                  </span>
-                </h2>
-
-                <p className="mt-6 text-slate-300 leading-relaxed max-w-md">
-                  Register as a candidate to discover opportunities or as a
-                  recruiter to post jobs and manage applications.
-                </p>
-
-              </div>
-
-              {/* Feature Cards */}
-              <div className="grid grid-cols-3 gap-3">
-
-                <div className="rounded-2xl bg-white/[0.07] border border-white/10 p-4 backdrop-blur-sm">
-
-                  <div className="w-10 h-10 rounded-xl bg-blue-500/15 flex items-center justify-center">
-                    <Users size={21} className="text-blue-300" />
-                  </div>
-
-                  <h3 className="mt-4 font-bold text-sm">
-                    Candidate
-                  </h3>
-
-                  <p className="mt-1 text-xs leading-relaxed text-slate-400">
-                    Find and apply for jobs
-                  </p>
-
-                </div>
-
-                <div className="rounded-2xl bg-white/[0.07] border border-white/10 p-4 backdrop-blur-sm">
-
-                  <div className="w-10 h-10 rounded-xl bg-blue-500/15 flex items-center justify-center">
-                    <Building2 size={21} className="text-blue-300" />
-                  </div>
-
-                  <h3 className="mt-4 font-bold text-sm">
-                    Recruiter
-                  </h3>
-
-                  <p className="mt-1 text-xs leading-relaxed text-slate-400">
-                    Post jobs and hire talent
-                  </p>
-
-                </div>
-
-                <div className="rounded-2xl bg-white/[0.07] border border-white/10 p-4 backdrop-blur-sm">
-
-                  <div className="w-10 h-10 rounded-xl bg-blue-500/15 flex items-center justify-center">
-                    <ShieldCheck size={21} className="text-blue-300" />
-                  </div>
-
-                  <h3 className="mt-4 font-bold text-sm">
-                    Secure
-                  </h3>
-
-                  <p className="mt-1 text-xs leading-relaxed text-slate-400">
-                    Role based access
-                  </p>
-
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
-          {/* Right Register Form */}
-          <div className="relative p-0 sm:p-8 lg:p-12">
-
-            {/* Mobile Background Decoration */}
-            <div className="absolute top-0 right-0 lg:hidden w-52 h-52 bg-blue-100/60 rounded-full blur-3xl -z-0" />
-
-            <div className="relative z-10 max-w-md mx-auto py-5 sm:py-4 lg:py-8">
-
-              {/* Mobile Logo */}
-              <div className="flex lg:hidden items-center gap-3 mb-9">
-
-                <div className="w-11 h-11 rounded-2xl bg-slate-950 text-white flex items-center justify-center shadow-lg shadow-slate-200">
-                  <BriefcaseBusiness size={22} />
-                </div>
-
-                <h1 className="text-xl font-extrabold tracking-tight">
-                  Smart<span className="text-blue-600">Job</span>
+                <h1 className="text-2xl font-black tracking-tight">
+                  Smart<span className="text-blue-400">Job</span>
                 </h1>
 
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Your career starts here
+                </p>
+              </div>
+            </div>
+
+            {/* Main content */}
+
+            <div className="relative z-10 my-auto py-12">
+              <div
+                className="
+                  inline-flex items-center gap-2
+                  px-3.5 py-2
+                  rounded-full
+                  bg-white/[0.06]
+                  border border-white/10
+                  backdrop-blur-md
+                "
+              >
+                <Sparkles size={15} className="text-blue-300" />
+
+                <span className="text-xs font-bold text-blue-100">
+                  Start your professional journey
+                </span>
               </div>
 
-              {/* Form Heading */}
-              <div className="mb-7 sm:mb-9">
+              <h2
+                className="
+                  mt-7
+                  max-w-md
+                  text-5xl
+                  xl:text-[3.4rem]
+                  leading-[1.08]
+                  font-black
+                  tracking-tight
+                "
+              >
+                Create your future.
 
-                <div className="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-5">
-                  <UserPlus size={25} className="text-blue-600" />
+                <span className="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-300">
+                  Start today.
+                </span>
+              </h2>
+
+              <p className="mt-6 max-w-md text-sm leading-7 text-slate-400">
+                Create your SmartJob account to discover opportunities, build
+                your professional presence, or connect with the right talent.
+              </p>
+
+              {/* Features */}
+
+              <div className="mt-10 space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 shrink-0 rounded-xl bg-white/[0.07] border border-white/10 flex items-center justify-center">
+                    <Search size={18} className="text-blue-300" />
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-bold">
+                      Explore new opportunities
+                    </p>
+
+                    <p className="mt-0.5 text-xs text-slate-400">
+                      Discover jobs that match your skills.
+                    </p>
+                  </div>
                 </div>
 
-                <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 shrink-0 rounded-xl bg-white/[0.07] border border-white/10 flex items-center justify-center">
+                    <FileCheck2 size={18} className="text-indigo-300" />
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-bold">
+                      Build your professional journey
+                    </p>
+
+                    <p className="mt-0.5 text-xs text-slate-400">
+                      Manage your opportunities in one place.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 shrink-0 rounded-xl bg-white/[0.07] border border-white/10 flex items-center justify-center">
+                    <CheckCircle2 size={18} className="text-cyan-300" />
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-bold">
+                      Simple and secure access
+                    </p>
+
+                    <p className="mt-0.5 text-xs text-slate-400">
+                      Your account is ready when you are.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom */}
+
+            <div className="relative z-10 flex items-center gap-2 text-xs text-slate-400">
+              <ShieldCheck size={16} className="text-blue-400" />
+
+              <span>Secure access to your SmartJob workspace</span>
+            </div>
+          </div>
+
+          {/* ================= REGISTER FORM ================= */}
+
+          <div className="relative bg-white px-6 py-8 sm:px-10 sm:py-10 lg:px-10 xl:px-14">
+            <div className="absolute -top-24 -right-24 w-64 h-64 rounded-full bg-blue-500/5 blur-[90px] pointer-events-none" />
+
+            <div className="absolute -bottom-32 -left-24 w-64 h-64 rounded-full bg-indigo-500/5 blur-[100px] pointer-events-none" />
+
+            <div className="relative z-10 w-full max-w-lg mx-auto">
+              {/* MOBILE LOGO */}
+
+              <div className="flex lg:hidden justify-center">
+                <div className="flex items-center gap-3">
+                  <div className="relative">
+                    <div className="absolute inset-0 translate-y-1.5 rounded-2xl bg-blue-200" />
+
+                    <div
+                      className="
+                        relative
+                        w-14 h-14
+                        rounded-2xl
+                        bg-gradient-to-br
+                        from-blue-500
+                        to-indigo-600
+                        text-white
+                        flex items-center justify-center
+                        shadow-lg shadow-blue-500/20
+                      "
+                    >
+                      <BriefcaseBusiness size={27} />
+                    </div>
+                  </div>
+
+                  <div>
+                    <h1 className="text-2xl font-black tracking-tight text-slate-950">
+                      Smart<span className="text-blue-600">Job</span>
+                    </h1>
+
+                    <p className="text-xs text-slate-400 mt-0.5">
+                      Your career starts here
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* HEADING */}
+
+              <div className="mt-10 lg:mt-0">
+                <div
+                  className="
+                    inline-flex items-center gap-2
+                    px-3.5 py-2
+                    rounded-full
+                    bg-blue-50
+                    border border-blue-100
+                  "
+                >
+                  <UserPlus size={14} className="text-blue-600" />
+
+                  <span className="text-xs font-bold text-blue-700">
+                    Create your SmartJob account
+                  </span>
+                </div>
+
+                <h2 className="mt-5 text-3xl sm:text-4xl font-black tracking-tight text-slate-950">
                   Create account
                 </h2>
 
-                <p className="mt-2 text-sm sm:text-base text-slate-500 leading-relaxed">
+                <p className="mt-3 text-sm leading-6 text-slate-500">
                   {isRecruiter
-                    ? "Create your recruiter account and add your company details."
+                    ? "Create your recruiter account and tell us about your company."
                     : "Create your account and start exploring new opportunities."}
                 </p>
-
               </div>
 
-              {/* Error */}
+              {/* ERROR */}
+
               {error && (
-                <div className="mb-6 flex items-start gap-3 rounded-2xl bg-red-50 border border-red-100 px-4 py-3.5 text-sm font-semibold text-red-600">
+                <div className="mt-7 flex items-start gap-3 rounded-2xl bg-red-50 border border-red-100 px-4 py-4">
+                  <div className="w-9 h-9 shrink-0 rounded-xl bg-red-100 flex items-center justify-center">
+                    <AlertCircle size={18} className="text-red-600" />
+                  </div>
 
-                  <div className="w-2 h-2 rounded-full bg-red-500 mt-1.5 shrink-0" />
+                  <div>
+                    <p className="text-sm font-black text-red-700">
+                      Registration failed
+                    </p>
 
-                  <span>{error}</span>
-
+                    <p className="mt-1 text-xs leading-5 text-red-500">
+                      {error}
+                    </p>
+                  </div>
                 </div>
               )}
 
-              {/* Success */}
+              {/* SUCCESS */}
+
               {success && (
-                <div className="mb-6 flex items-start gap-3 rounded-2xl bg-green-50 border border-green-100 px-4 py-3.5 text-sm font-semibold text-green-700">
+                <div className="mt-7 flex items-start gap-3 rounded-2xl bg-green-50 border border-green-100 px-4 py-4">
+                  <div className="w-9 h-9 shrink-0 rounded-xl bg-green-100 flex items-center justify-center">
+                    <BadgeCheck size={18} className="text-green-600" />
+                  </div>
 
-                  <BadgeCheck
-                    size={19}
-                    className="text-green-600 shrink-0 mt-0.5"
-                  />
+                  <div>
+                    <p className="text-sm font-black text-green-700">
+                      Success
+                    </p>
 
-                  <span>{success}</span>
-
+                    <p className="mt-1 text-xs leading-5 text-green-600">
+                      {success}
+                    </p>
+                  </div>
                 </div>
               )}
 
-              <form className="space-y-5" onSubmit={handleSubmit}>
+              {/* ================= FORM ================= */}
 
-                {/* Role */}
+              <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+                {/* ROLE */}
+
                 <div>
-
                   <div className="flex items-center justify-between mb-3">
-
-                    <label className="block text-sm font-bold text-slate-700">
-                      Register As
+                    <label className="text-sm font-bold text-slate-700">
+                      Register as
                     </label>
 
                     <span className="text-[11px] font-semibold text-slate-400">
-                      Choose your account type
+                      Choose account type
                     </span>
-
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {/* Candidate */}
 
                     <label
-                      className={`relative flex items-center gap-3 rounded-2xl px-4 py-4 cursor-pointer border transition-all duration-200 ${
+                      className={`relative flex items-center gap-3 rounded-2xl px-4 py-4 cursor-pointer border transition-all duration-300 ${
                         formData.role === "CANDIDATE"
-                          ? "bg-blue-50 border-blue-300 ring-4 ring-blue-50"
-                          : "bg-slate-50 border-slate-200 hover:border-blue-100"
+                          ? "bg-blue-50 border-blue-300 ring-4 ring-blue-50 shadow-sm"
+                          : "bg-slate-50 border-slate-200 hover:border-blue-200 hover:bg-white"
                       }`}
                     >
-
                       <input
                         type="radio"
                         name="role"
@@ -330,9 +495,9 @@ const Register = () => {
                       />
 
                       <div
-                        className={`w-11 h-11 rounded-xl flex items-center justify-center ${
+                        className={`w-11 h-11 shrink-0 rounded-xl flex items-center justify-center transition-all ${
                           formData.role === "CANDIDATE"
-                            ? "bg-blue-600 text-white"
+                            ? "bg-blue-600 text-white shadow-md shadow-blue-200"
                             : "bg-white text-slate-500 border border-slate-100"
                         }`}
                       >
@@ -340,7 +505,6 @@ const Register = () => {
                       </div>
 
                       <div>
-
                         <p className="text-sm font-bold text-slate-900">
                           Candidate
                         </p>
@@ -348,7 +512,6 @@ const Register = () => {
                         <p className="mt-0.5 text-xs text-slate-500">
                           Find and apply for jobs
                         </p>
-
                       </div>
 
                       {formData.role === "CANDIDATE" && (
@@ -357,17 +520,17 @@ const Register = () => {
                           className="absolute top-3 right-3 text-blue-600"
                         />
                       )}
-
                     </label>
 
+                    {/* Recruiter */}
+
                     <label
-                      className={`relative flex items-center gap-3 rounded-2xl px-4 py-4 cursor-pointer border transition-all duration-200 ${
+                      className={`relative flex items-center gap-3 rounded-2xl px-4 py-4 cursor-pointer border transition-all duration-300 ${
                         formData.role === "RECRUITER"
-                          ? "bg-blue-50 border-blue-300 ring-4 ring-blue-50"
-                          : "bg-slate-50 border-slate-200 hover:border-blue-100"
+                          ? "bg-indigo-50 border-indigo-300 ring-4 ring-indigo-50 shadow-sm"
+                          : "bg-slate-50 border-slate-200 hover:border-indigo-200 hover:bg-white"
                       }`}
                     >
-
                       <input
                         type="radio"
                         name="role"
@@ -378,9 +541,9 @@ const Register = () => {
                       />
 
                       <div
-                        className={`w-11 h-11 rounded-xl flex items-center justify-center ${
+                        className={`w-11 h-11 shrink-0 rounded-xl flex items-center justify-center transition-all ${
                           formData.role === "RECRUITER"
-                            ? "bg-blue-600 text-white"
+                            ? "bg-indigo-600 text-white shadow-md shadow-indigo-200"
                             : "bg-white text-slate-500 border border-slate-100"
                         }`}
                       >
@@ -388,43 +551,50 @@ const Register = () => {
                       </div>
 
                       <div>
-
                         <p className="text-sm font-bold text-slate-900">
                           Recruiter
                         </p>
 
                         <p className="mt-0.5 text-xs text-slate-500">
-                          Post jobs and hire
+                          Post jobs and hire talent
                         </p>
-
                       </div>
 
                       {formData.role === "RECRUITER" && (
                         <BadgeCheck
                           size={18}
-                          className="absolute top-3 right-3 text-blue-600"
+                          className="absolute top-3 right-3 text-indigo-600"
                         />
                       )}
-
                     </label>
-
                   </div>
-
                 </div>
 
-                {/* Full Name */}
-                <div>
+                {/* FULL NAME */}
 
-                  <label className="block text-sm font-bold text-slate-700 mb-2">
+                <div>
+                  <label className="block mb-2.5 text-sm font-bold text-slate-700">
                     Full Name
                   </label>
 
-                  <div className="group flex items-center gap-3 bg-slate-50 rounded-2xl px-4 py-4 border border-slate-200 focus-within:border-blue-300 focus-within:bg-white focus-within:ring-4 focus-within:ring-blue-50 transition-all">
-
-                    <UserRound
-                      size={20}
-                      className="text-slate-400 group-focus-within:text-blue-600 transition shrink-0"
-                    />
+                  <div
+                    className="
+                      group flex items-center gap-3
+                      rounded-2xl border border-slate-200
+                      bg-slate-50 px-4 py-3.5
+                      transition-all duration-300
+                      focus-within:bg-white
+                      focus-within:border-blue-400
+                      focus-within:ring-4
+                      focus-within:ring-blue-50
+                    "
+                  >
+                    <div className="w-10 h-10 shrink-0 rounded-xl bg-white border border-slate-100 flex items-center justify-center shadow-sm transition-all group-focus-within:bg-blue-600 group-focus-within:border-blue-600">
+                      <UserRound
+                        size={18}
+                        className="text-slate-400 group-focus-within:text-white transition-colors"
+                      />
+                    </div>
 
                     <input
                       type="text"
@@ -432,26 +602,37 @@ const Register = () => {
                       value={formData.fullName}
                       onChange={handleChange}
                       placeholder="Enter your full name"
-                      className="w-full bg-transparent outline-none text-sm text-slate-700 placeholder:text-slate-400"
+                      required
+                      className="min-w-0 flex-1 bg-transparent outline-none text-sm font-medium text-slate-700 placeholder:text-slate-400"
                     />
-
                   </div>
-
                 </div>
 
-                {/* Email */}
-                <div>
+                {/* EMAIL */}
 
-                  <label className="block text-sm font-bold text-slate-700 mb-2">
+                <div>
+                  <label className="block mb-2.5 text-sm font-bold text-slate-700">
                     Email Address
                   </label>
 
-                  <div className="group flex items-center gap-3 bg-slate-50 rounded-2xl px-4 py-4 border border-slate-200 focus-within:border-blue-300 focus-within:bg-white focus-within:ring-4 focus-within:ring-blue-50 transition-all">
-
-                    <Mail
-                      size={20}
-                      className="text-slate-400 group-focus-within:text-blue-600 transition shrink-0"
-                    />
+                  <div
+                    className="
+                      group flex items-center gap-3
+                      rounded-2xl border border-slate-200
+                      bg-slate-50 px-4 py-3.5
+                      transition-all duration-300
+                      focus-within:bg-white
+                      focus-within:border-blue-400
+                      focus-within:ring-4
+                      focus-within:ring-blue-50
+                    "
+                  >
+                    <div className="w-10 h-10 shrink-0 rounded-xl bg-white border border-slate-100 flex items-center justify-center shadow-sm transition-all group-focus-within:bg-blue-600 group-focus-within:border-blue-600">
+                      <Mail
+                        size={18}
+                        className="text-slate-400 group-focus-within:text-white transition-colors"
+                      />
+                    </div>
 
                     <input
                       type="email"
@@ -459,50 +640,44 @@ const Register = () => {
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="Enter your email"
-                      className="w-full bg-transparent outline-none text-sm text-slate-700 placeholder:text-slate-400"
+                      required
+                      className="min-w-0 flex-1 bg-transparent outline-none text-sm font-medium text-slate-700 placeholder:text-slate-400"
                     />
-
                   </div>
-
                 </div>
 
-                {/* Recruiter Company Details */}
+                {/* ================= RECRUITER COMPANY DETAILS ================= */}
+
                 {isRecruiter && (
-                  <div className="space-y-5 rounded-3xl bg-blue-50/60 border border-blue-100 p-4 sm:p-5">
-
+                  <div className="space-y-5 rounded-[1.5rem] bg-slate-50 border border-slate-200 p-4 sm:p-5">
                     <div className="flex items-start gap-3">
-
-                      <div className="w-10 h-10 rounded-xl bg-white border border-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                      <div className="w-10 h-10 shrink-0 rounded-xl bg-white border border-slate-200 text-indigo-600 flex items-center justify-center shadow-sm">
                         <Building2 size={19} />
                       </div>
 
                       <div>
-
-                        <h3 className="text-sm font-extrabold text-slate-900">
+                        <h3 className="text-sm font-black text-slate-900">
                           Company Details
                         </h3>
 
                         <p className="mt-1 text-xs leading-relaxed text-slate-500">
-                          Add your company information to complete the recruiter
-                          profile.
+                          Add your company information to complete your
+                          recruiter profile.
                         </p>
-
                       </div>
-
                     </div>
 
                     {/* Company Name */}
-                    <div>
 
-                      <label className="block text-sm font-bold text-slate-700 mb-2">
+                    <div>
+                      <label className="block mb-2.5 text-sm font-bold text-slate-700">
                         Company Name
                       </label>
 
-                      <div className="group flex items-center gap-3 bg-white rounded-2xl px-4 py-4 border border-blue-100 focus-within:border-blue-300 focus-within:ring-4 focus-within:ring-blue-100/50 transition-all">
-
+                      <div className="group flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3.5 transition-all duration-300 focus-within:border-indigo-400 focus-within:ring-4 focus-within:ring-indigo-50">
                         <Building2
-                          size={20}
-                          className="text-slate-400 group-focus-within:text-blue-600 transition shrink-0"
+                          size={18}
+                          className="text-slate-400 group-focus-within:text-indigo-600 transition shrink-0"
                         />
 
                         <input
@@ -511,25 +686,25 @@ const Register = () => {
                           value={formData.companyName}
                           onChange={handleChange}
                           placeholder="Enter company name"
-                          className="w-full bg-transparent outline-none text-sm text-slate-700 placeholder:text-slate-400"
+                          className="min-w-0 flex-1 bg-transparent outline-none text-sm font-medium text-slate-700 placeholder:text-slate-400"
                         />
-
                       </div>
-
                     </div>
 
                     {/* Company Website */}
-                    <div>
 
-                      <label className="block text-sm font-bold text-slate-700 mb-2">
-                        Company Website
+                    <div>
+                      <label className="block mb-2.5 text-sm font-bold text-slate-700">
+                        Company Website{" "}
+                        <span className="text-xs font-normal text-slate-400">
+                          (Optional)
+                        </span>
                       </label>
 
-                      <div className="group flex items-center gap-3 bg-white rounded-2xl px-4 py-4 border border-blue-100 focus-within:border-blue-300 focus-within:ring-4 focus-within:ring-blue-100/50 transition-all">
-
+                      <div className="group flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3.5 transition-all duration-300 focus-within:border-indigo-400 focus-within:ring-4 focus-within:ring-indigo-50">
                         <Globe
-                          size={20}
-                          className="text-slate-400 group-focus-within:text-blue-600 transition shrink-0"
+                          size={18}
+                          className="text-slate-400 group-focus-within:text-indigo-600 transition shrink-0"
                         />
 
                         <input
@@ -538,25 +713,22 @@ const Register = () => {
                           value={formData.companyWebsite}
                           onChange={handleChange}
                           placeholder="https://company.com"
-                          className="w-full bg-transparent outline-none text-sm text-slate-700 placeholder:text-slate-400"
+                          className="min-w-0 flex-1 bg-transparent outline-none text-sm font-medium text-slate-700 placeholder:text-slate-400"
                         />
-
                       </div>
-
                     </div>
 
                     {/* Company Location */}
-                    <div>
 
-                      <label className="block text-sm font-bold text-slate-700 mb-2">
+                    <div>
+                      <label className="block mb-2.5 text-sm font-bold text-slate-700">
                         Company Location
                       </label>
 
-                      <div className="group flex items-center gap-3 bg-white rounded-2xl px-4 py-4 border border-blue-100 focus-within:border-blue-300 focus-within:ring-4 focus-within:ring-blue-100/50 transition-all">
-
+                      <div className="group flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3.5 transition-all duration-300 focus-within:border-indigo-400 focus-within:ring-4 focus-within:ring-indigo-50">
                         <MapPin
-                          size={20}
-                          className="text-slate-400 group-focus-within:text-blue-600 transition shrink-0"
+                          size={18}
+                          className="text-slate-400 group-focus-within:text-indigo-600 transition shrink-0"
                         />
 
                         <input
@@ -565,25 +737,22 @@ const Register = () => {
                           value={formData.companyLocation}
                           onChange={handleChange}
                           placeholder="Pune, India"
-                          className="w-full bg-transparent outline-none text-sm text-slate-700 placeholder:text-slate-400"
+                          className="min-w-0 flex-1 bg-transparent outline-none text-sm font-medium text-slate-700 placeholder:text-slate-400"
                         />
-
                       </div>
-
                     </div>
 
                     {/* Company Description */}
-                    <div>
 
-                      <label className="block text-sm font-bold text-slate-700 mb-2">
+                    <div>
+                      <label className="block mb-2.5 text-sm font-bold text-slate-700">
                         Company Description
                       </label>
 
-                      <div className="group flex items-start gap-3 bg-white rounded-2xl px-4 py-4 border border-blue-100 focus-within:border-blue-300 focus-within:ring-4 focus-within:ring-blue-100/50 transition-all">
-
+                      <div className="group flex items-start gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3.5 transition-all duration-300 focus-within:border-indigo-400 focus-within:ring-4 focus-within:ring-indigo-50">
                         <FileText
-                          size={20}
-                          className="text-slate-400 group-focus-within:text-blue-600 transition shrink-0 mt-0.5"
+                          size={18}
+                          className="text-slate-400 group-focus-within:text-indigo-600 transition shrink-0 mt-0.5"
                         />
 
                         <textarea
@@ -592,29 +761,38 @@ const Register = () => {
                           onChange={handleChange}
                           placeholder="Write a short company description"
                           rows="4"
-                          className="w-full bg-transparent outline-none text-sm text-slate-700 placeholder:text-slate-400 resize-none"
+                          className="min-w-0 flex-1 bg-transparent outline-none text-sm font-medium text-slate-700 placeholder:text-slate-400 resize-none"
                         />
-
                       </div>
-
                     </div>
-
                   </div>
                 )}
 
-                {/* Password */}
-                <div>
+                {/* PASSWORD */}
 
-                  <label className="block text-sm font-bold text-slate-700 mb-2">
+                <div>
+                  <label className="block mb-2.5 text-sm font-bold text-slate-700">
                     Password
                   </label>
 
-                  <div className="group flex items-center gap-3 bg-slate-50 rounded-2xl px-4 py-4 border border-slate-200 focus-within:border-blue-300 focus-within:bg-white focus-within:ring-4 focus-within:ring-blue-50 transition-all">
-
-                    <LockKeyhole
-                      size={20}
-                      className="text-slate-400 group-focus-within:text-blue-600 transition shrink-0"
-                    />
+                  <div
+                    className="
+                      group flex items-center gap-3
+                      rounded-2xl border border-slate-200
+                      bg-slate-50 px-4 py-3.5
+                      transition-all duration-300
+                      focus-within:bg-white
+                      focus-within:border-blue-400
+                      focus-within:ring-4
+                      focus-within:ring-blue-50
+                    "
+                  >
+                    <div className="w-10 h-10 shrink-0 rounded-xl bg-white border border-slate-100 flex items-center justify-center shadow-sm transition-all group-focus-within:bg-blue-600 group-focus-within:border-blue-600">
+                      <LockKeyhole
+                        size={18}
+                        className="text-slate-400 group-focus-within:text-white transition-colors"
+                      />
+                    </div>
 
                     <input
                       type={showPassword ? "text" : "password"}
@@ -622,13 +800,14 @@ const Register = () => {
                       value={formData.password}
                       onChange={handleChange}
                       placeholder="Create a strong password"
-                      className="w-full bg-transparent outline-none text-sm text-slate-700 placeholder:text-slate-400"
+                      required
+                      className="min-w-0 flex-1 bg-transparent outline-none text-sm font-medium text-slate-700 placeholder:text-slate-400"
                     />
 
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="text-slate-400 hover:text-blue-600 transition shrink-0"
+                      className="w-10 h-10 shrink-0 rounded-xl flex items-center justify-center text-slate-400 hover:bg-blue-50 hover:text-blue-600 transition-all"
                       aria-label="Toggle password visibility"
                     >
                       {showPassword ? (
@@ -637,24 +816,34 @@ const Register = () => {
                         <Eye size={19} />
                       )}
                     </button>
-
                   </div>
-
                 </div>
 
-                {/* Confirm Password */}
-                <div>
+                {/* CONFIRM PASSWORD */}
 
-                  <label className="block text-sm font-bold text-slate-700 mb-2">
+                <div>
+                  <label className="block mb-2.5 text-sm font-bold text-slate-700">
                     Confirm Password
                   </label>
 
-                  <div className="group flex items-center gap-3 bg-slate-50 rounded-2xl px-4 py-4 border border-slate-200 focus-within:border-blue-300 focus-within:bg-white focus-within:ring-4 focus-within:ring-blue-50 transition-all">
-
-                    <LockKeyhole
-                      size={20}
-                      className="text-slate-400 group-focus-within:text-blue-600 transition shrink-0"
-                    />
+                  <div
+                    className="
+                      group flex items-center gap-3
+                      rounded-2xl border border-slate-200
+                      bg-slate-50 px-4 py-3.5
+                      transition-all duration-300
+                      focus-within:bg-white
+                      focus-within:border-blue-400
+                      focus-within:ring-4
+                      focus-within:ring-blue-50
+                    "
+                  >
+                    <div className="w-10 h-10 shrink-0 rounded-xl bg-white border border-slate-100 flex items-center justify-center shadow-sm transition-all group-focus-within:bg-blue-600 group-focus-within:border-blue-600">
+                      <LockKeyhole
+                        size={18}
+                        className="text-slate-400 group-focus-within:text-white transition-colors"
+                      />
+                    </div>
 
                     <input
                       type={showConfirmPassword ? "text" : "password"}
@@ -662,7 +851,8 @@ const Register = () => {
                       value={formData.confirmPassword}
                       onChange={handleChange}
                       placeholder="Confirm your password"
-                      className="w-full bg-transparent outline-none text-sm text-slate-700 placeholder:text-slate-400"
+                      required
+                      className="min-w-0 flex-1 bg-transparent outline-none text-sm font-medium text-slate-700 placeholder:text-slate-400"
                     />
 
                     <button
@@ -670,7 +860,7 @@ const Register = () => {
                       onClick={() =>
                         setShowConfirmPassword(!showConfirmPassword)
                       }
-                      className="text-slate-400 hover:text-blue-600 transition shrink-0"
+                      className="w-10 h-10 shrink-0 rounded-xl flex items-center justify-center text-slate-400 hover:bg-blue-50 hover:text-blue-600 transition-all"
                       aria-label="Toggle confirm password visibility"
                     >
                       {showConfirmPassword ? (
@@ -679,14 +869,12 @@ const Register = () => {
                         <Eye size={19} />
                       )}
                     </button>
-
                   </div>
-
                 </div>
 
-                {/* Terms */}
-                <label className="flex items-start gap-3 text-sm text-slate-600 cursor-pointer">
+                {/* TERMS */}
 
+                <label className="flex items-start gap-3 text-sm text-slate-600 cursor-pointer">
                   <input
                     type="checkbox"
                     name="termsAccepted"
@@ -696,66 +884,92 @@ const Register = () => {
                   />
 
                   <span className="leading-relaxed">
-
                     I agree to the{" "}
-
                     <button
                       type="button"
-                      className="font-bold text-blue-600 hover:text-blue-700 transition"
+                      className="font-bold text-blue-600 hover:text-indigo-600 transition"
                     >
                       Terms & Conditions
                     </button>{" "}
-
                     and{" "}
-
                     <button
                       type="button"
-                      className="font-bold text-blue-600 hover:text-blue-700 transition"
+                      className="font-bold text-blue-600 hover:text-indigo-600 transition"
                     >
                       Privacy Policy
                     </button>
-
                     .
-
                   </span>
-
                 </label>
 
-                {/* Submit */}
+                {/* SUBMIT */}
+
                 <button
                   type="submit"
-                  className="w-full inline-flex items-center justify-center gap-2 py-4 rounded-2xl bg-blue-600 text-white text-sm font-bold hover:bg-blue-700 active:scale-[0.98] transition-all shadow-lg shadow-blue-200"
+                  disabled={loading}
+                  className="
+                    group
+                    relative
+                    w-full
+                    overflow-hidden
+                    rounded-2xl
+                    bg-slate-950
+                    py-4
+                    text-sm
+                    font-black
+                    text-white
+                    shadow-lg
+                    shadow-slate-950/15
+                    transition-all
+                    duration-300
+                    hover:-translate-y-1
+                    hover:bg-blue-600
+                    hover:shadow-xl
+                    hover:shadow-blue-500/20
+                    active:scale-[0.99]
+                    disabled:opacity-60
+                    disabled:cursor-not-allowed
+                    disabled:hover:translate-y-0
+                  "
                 >
-                  Create Account
-                  <ArrowRight size={18} />
-                </button>
+                  <span className="relative flex items-center justify-center gap-3">
+                    {loading ? "Creating account..." : "Create your account"}
 
+                    {!loading && (
+                      <ArrowRight
+                        size={18}
+                        className="transition-transform duration-300 group-hover:translate-x-1"
+                      />
+                    )}
+                  </span>
+                </button>
               </form>
 
-              <p className="mt-8 text-center text-sm text-slate-500">
+              {/* FOOTER */}
 
-                Already have an account?{" "}
+              <div className="mt-8 pt-6 border-t border-slate-100 text-center">
+                <p className="text-sm text-slate-500">
+                  Already have an account?{" "}
+                  <Link
+                    to="/login"
+                    className="font-black text-blue-600 hover:text-indigo-600 transition"
+                  >
+                    Login now
+                  </Link>
+                </p>
 
-                <Link
-                  className="font-bold text-blue-600 hover:text-blue-700 transition"
-                  to="/login"
-                >
-                  Login now
-                </Link>
+                <div className="mt-5 flex items-center justify-center gap-2 text-[11px] text-slate-400">
+                  <ShieldCheck size={14} className="text-blue-500" />
 
-              </p>
-
+                  <span>Secure and protected registration</span>
+                </div>
+              </div>
             </div>
-
           </div>
-
         </div>
-
       </div>
-
     </div>
   );
 };
 
 export default Register;
-
